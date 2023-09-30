@@ -1,0 +1,58 @@
+<div class="modal-header">
+  <h4 class="modal-title">Đăng kí tài khoản</h4>
+  <button
+    type="button"
+    class="btn-close"
+    aria-label="Close"
+    (click)="activeModal.dismiss('Cross click')"
+  ></button>
+</div>
+<div class="modal-body">
+  <form>
+    <div class="form-group">
+      <label for="username">Username:</label>
+      <input
+        type="text"
+        id="username"
+        name="username"
+        class="form-control mt-2"
+        [(ngModel)]="formData.username"
+        required
+      />
+    </div>
+    <div class="form-group">
+      <label for="email">Email:</label>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        class="form-control mt-2"
+        [(ngModel)]="formData.email"
+        required
+      />
+    </div>
+    <div class="form-group">
+      <label for="password">Password:</label>
+      <input
+        type="password"
+        id="password"
+        name="password"
+        class="form-control mt-2"
+        [(ngModel)]="formData.password"
+        required
+      />
+    </div>
+  </form>
+  <div class="modal-footer border-0 p-0 pt-2">
+    <button type="button" class="btn btn-success" (click)="onSubmit()">
+      Đăng kí
+    </button>
+    <button
+      type="button"
+      class="btn btn-success"
+      (click)="activeModal.close('Close click')"
+    >
+      Đóng
+    </button>
+  </div>
+</div>

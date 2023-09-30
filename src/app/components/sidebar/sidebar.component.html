@@ -1,0 +1,15 @@
+<div class="sidebar-container">
+  <h5 class="mb-4">
+    <i class="bi bi-list"></i>
+    Danh mục sản phẩm
+  </h5>
+  <nav class="sidebar">
+    <div class="position-sticky">
+      <ul class="nav flex-column">
+        <li class="nav-item" *ngFor="let category of listCategory">
+          <p class="" href="#">{{ category }}</p>
+        </li>
+      </ul>
+    </div>
+  </nav>
+</div>

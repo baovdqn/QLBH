@@ -1,0 +1,33 @@
+<nav class="navbar bg-success p-2 text-dark bg-opacity-25">
+  <div class="container">
+    <a class="navbar-brand">Green Garden</a>
+    <div class="navbar-right d-flex gap-3">
+      <form class="d-flex" role="search">
+        <input
+          class="form-control me-2"
+          type="search"
+          placeholder="Tìm kiếm sản phẩm"
+          style="width: 350px"
+        />
+        <button class="btn btn-success" type="submit">
+          <i class="bi bi-search"></i>
+        </button>
+      </form>
+      <div class="navbar-nav flex-row gap-2">
+        <ng-container *ngIf="noLogged$ | async; else logged">
+          <button type="button" class="btn btn-success">
+            <span (click)="openFormLogin()">Đăng nhập</span>
+          </button>
+          <button type="button" class="btn btn-success">
+            <span (click)="openFormRegister()">Đăng kí</span>
+          </button>
+        </ng-container>
+        <ng-template #logged>
+          <button type="button" class="btn btn-success">
+            <i class="bi bi-person"></i>
+          </button>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</nav>

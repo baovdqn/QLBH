@@ -1,0 +1,23 @@
+<div class="card">
+  <img
+    class="card-img-top"
+    [src]="product.imageProduct"
+    alt="Card image cap"
+    style="height: 300px"
+  />
+  <div class="card-body">
+    <h5 class="card-title">{{ product.nameProduct }}</h5>
+    <p class="card-text text-success price">
+      {{ product.priceProduct | number : '1.0-0' }}đ
+    </p>
+    <div class="d-flex justify-content-between gap-1">
+      <button
+        class="btn btn-primary text-btn btn-sm"
+        (click)="addToCart(product)"
+      >
+        Thêm vào giỏ hàng
+      </button>
+      <button class="btn btn-primary text-btn btn-sm">Xem chi tiết</button>
+    </div>
+  </div>
+</div>
