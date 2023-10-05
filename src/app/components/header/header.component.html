@@ -1,6 +1,6 @@
 <nav class="navbar bg-success p-2 text-dark bg-opacity-25">
   <div class="container">
-    <a class="navbar-brand">Green Garden</a>
+    <a class="navbar-brand nav-link" [routerLink]="'/'">Green Garden</a>
     <div class="navbar-right d-flex gap-3">
       <form class="d-flex" role="search">
         <input
@@ -22,10 +22,26 @@
             <span (click)="openFormRegister()">Đăng kí</span>
           </button>
         </ng-container>
-        <ng-template #logged>
-          <button type="button" class="btn btn-success">
-            <i class="bi bi-person"></i>
-          </button>
+        <ng-template #logged ngbDropdown>
+          <div>
+            <button
+              type="button"
+              class="btn btn-success"
+              id="dropdownLogged"
+              ngbDropdownToggle
+            >
+              <i class="bi bi-person"></i>
+            </button>
+            <div
+              ngbDropdownMenu
+              aria-labelledby="dropdownLogged"
+              class="dropdown-logged dropdown-menu dropdown-menu-end"
+            >
+              <button ngbDropdownItem (click)="manager()">Quản lý</button>
+              <button ngbDropdownItem (click)="logout()">Đăng xuất</button>
+              <button ngbDropdownItem></button>
+            </div>
+          </div>
         </ng-template>
       </div>
     </div>

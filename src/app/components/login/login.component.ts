@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { admin } from 'src/app/features/admin/account';
-import { CartsService } from 'src/app/services/carts.service';
+import { AccountService } from 'src/app/services/account.service';
+import { CoreService } from 'src/app/services/core.service';
 
 @Component({
   selector: 'app-login',
@@ -9,30 +11,48 @@ import { CartsService } from 'src/app/services/carts.service';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
+  showAlert: boolean = false;
   formData = {
-    username: '',
+    email: '',
     password: ''
   };
   account = admin;
 
   constructor(
     public activeModal: NgbActiveModal,
-    private cartService: CartsService
+    private coreService: CoreService,
+    private router: Router,
+    private accountService: AccountService
   ) {}
 
   ngOnInit() {}
 
   onSubmit() {
-    // Here, you can add your login logic.
-    // For example, you can send a request to a server to validate the user's credentials.
-    // For demonstration purposes, we'll just log the form data to the console.
-    console.log('Form Data:', this.formData);
-    if (
-      this.formData.username === admin.username &&
-      this.formData.password === admin.password
-    ) {
-      this.cartService.noLogged$.next(false);
-    } else {
-    }
+    this.accountService.login(this.formData).subscribe(
+      (res) => {
+        localStorage.setItem('currentUser', JSON.stringify(res));
+        localStorage.setItem('token', JSON.stringify(res.jwt.accessToken));
+        this.coreService.noLogged$.next(false);
+        this.activeModal.close();
+        this.router.navigate(['/']);
+      },
+      (err) => {
+        this.showAlert = true;
+        this.formData.email = '';
+        this.formData.password = '';
+      }
+    );
+    // if (
+    //   this.formData.username === admin.username &&
+    //   this.formData.password === admin.password
+    // ) {
+    //   this.coreService.noLogged$.next(false);
+    //   this.activeModal.close();
+    //   this.router.navigate(['/']);
+    // } else {
+    //   this.showAlert = true;
+    //   this.formData.username = '';
+    //   this.formData.password = '';
+    // }
   }
 }

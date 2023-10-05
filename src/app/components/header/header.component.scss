@@ -1,3 +1,13 @@
 .navbar {
   height: 60px;
+
+  ::ng-deep {
+    .navbar-brand {
+      cursor: pointer;
+    }
+    .dropdown-logged {
+      position: absolute;
+      margin-top: 0.5rem;
+    }
+  }
 }

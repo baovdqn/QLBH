@@ -1,0 +1,52 @@
+<div class="cart-container">
+  <h5>Giỏ hàng</h5>
+  <h6>Danh mục sản phẩm</h6>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">STT</th>
+        <th scope="col">Ảnh</th>
+        <th scope="col">Tên Sản phẩm</th>
+        <th scope="col">Giá tiền</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let country of countries">
+        <th scope="row">{{ country.id }}</th>
+        <td>
+          <img
+            [src]="
+              'https://upload.wikimedia.org/wikipedia/commons/' + country.flag
+            "
+            class="me-2"
+            style="width: 20px"
+          />
+          {{ country.name }}
+        </td>
+        <td>{{ country.area | number }}</td>
+        <td>{{ country.population | number }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="d-flex justify-content-between p-2">
+    <ngb-pagination
+      [collectionSize]="collectionSize"
+      [(page)]="page"
+      [pageSize]="pageSize"
+      (pageChange)="refreshCountries()"
+    >
+    </ngb-pagination>
+
+    <select
+      class="form-select"
+      style="width: auto"
+      [(ngModel)]="pageSize"
+      (ngModelChange)="refreshCountries()"
+    >
+      <option [ngValue]="2">2 items per page</option>
+      <option [ngValue]="4">4 items per page</option>
+      <option [ngValue]="6">6 items per page</option>
+    </select>
+  </div>
+</div>

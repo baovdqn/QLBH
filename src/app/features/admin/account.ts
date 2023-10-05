@@ -1,4 +1,5 @@
 export const admin = {
   username: 'admin',
-  password: 'admin'
+  password: 'admin',
+  role: 'admin'
 };

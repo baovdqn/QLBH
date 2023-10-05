@@ -8,5 +8,4 @@ import { Product } from '../features/products/product/product.component';
 export class CartsService {
   constructor() {}
   carts$: BehaviorSubject<Array<Product>> = new BehaviorSubject<Product[]>([]);
-  noLogged$: BehaviorSubject<boolean> = new BehaviorSubject(true);
 }

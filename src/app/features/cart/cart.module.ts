@@ -1,21 +1,21 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AdminComponent } from './admin.component';
-import { AdminRoutes } from './admin.routing';
+import { CartComponent } from './cart.component';
+import { CartRoutes } from './cart.routing';
 import {
-  NgbPaginationModule,
-  NgbTypeaheadModule
+  NgbTypeaheadModule,
+  NgbPaginationModule
 } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 
 @NgModule({
   imports: [
     CommonModule,
-    AdminRoutes,
+    CartRoutes,
     NgbTypeaheadModule,
     NgbPaginationModule,
     FormsModule
   ],
-  declarations: [AdminComponent]
+  declarations: [CartComponent]
 })
-export class AdminModule {}
+export class CartModule {}

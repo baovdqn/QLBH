@@ -1,15 +1,40 @@
-<div class="sidebar-container">
+<div class="sidebar-container" *ngIf="!(isRouteAdmin$ | async); else admin">
   <h5 class="mb-4">
     <i class="bi bi-list"></i>
     Danh mục sản phẩm
   </h5>
   <nav class="sidebar">
     <div class="position-sticky">
-      <ul class="nav flex-column">
-        <li class="nav-item" *ngFor="let category of listCategory">
-          <p class="" href="#">{{ category }}</p>
+      <ul class="list-group">
+        <li
+          class="list-group-item list-group-item-action"
+          *ngFor="let category of listCategory"
+        >
+          <a class="nav-link" [routerLink]="category?.id">{{
+            category.name
+          }}</a>
         </li>
       </ul>
     </div>
   </nav>
 </div>
+<ng-template #admin>
+  <h5 class="mb-4">
+    <i class="bi bi-list"></i>
+    Danh mục quản lý
+  </h5>
+  <nav class="sidebar">
+    <div class="position-sticky">
+      <ul class="list-group">
+        <li
+          class="list-group-item list-group-item-action"
+          *ngFor="let category of listCategoryAdmin"
+        >
+          <span class="nav-link" (click)="navigateTo(category.link)">{{
+            category.name
+          }}</span>
+        </li>
+      </ul>
+    </div>
+  </nav>
+</ng-template>

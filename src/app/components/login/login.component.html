@@ -7,16 +7,19 @@
     (click)="activeModal.dismiss('Cross click')"
   ></button>
 </div>
+<ngb-alert *ngIf="showAlert" [type]="'danger'">{{
+  'Tài khoản hoặc mật khẩu không chính xác'
+}}</ngb-alert>
 <div class="modal-body">
-  <form>
+  <form id="formLogin">
     <div class="form-group">
-      <label for="username">Tên tài khoản:</label>
+      <label for="email">Email:</label>
       <input
         type="text"
-        id="username"
-        name="username"
+        id="email"
+        name="email"
         class="form-control mt-2"
-        [(ngModel)]="formData.username"
+        [(ngModel)]="formData.email"
         required
       />
     </div>
@@ -33,7 +36,12 @@
     </div>
   </form>
   <div class="modal-footer border-0 p-0 pt-2">
-    <button type="button" class="btn btn btn-success" (click)="onSubmit()">
+    <button
+      form="formLogin"
+      type="submit"
+      class="btn btn btn-success"
+      (click)="onSubmit()"
+    >
       Đăng nhập
     </button>
     <button

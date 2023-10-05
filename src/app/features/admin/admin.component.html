@@ -1,3 +1,49 @@
-<p>
-  admin works!
-</p>
+<div class="admin-container">
+  <h5 class="mb-4">{{ activeCategory?.name }}</h5>
+  <div [ngSwitch]="activeCategory.link">
+    <div *ngSwitchCase="'category'">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col-1">STT</th>
+            <th scope="col-9">Tên danh mục</th>
+            <th scope="col-2">Thao tác</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let category of listCategories">
+            <th scope="row">{{ category.id }}</th>
+            <td>{{ category?.name }}</td>
+            <td class="d-flex gap-3">
+              <button type="button" class="btn btn-success mr-4">
+                Chỉnh sửa
+              </button>
+              <button type="button" class="btn btn-success">Xoá</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- <div class="d-flex justify-content-between p-2">
+    <ngb-pagination
+      [collectionSize]="collectionSize"
+      [(page)]="page"
+      [pageSize]="pageSize"
+      (pageChange)="refreshCountries()"
+    >
+    </ngb-pagination>
+
+    <select
+      class="form-select"
+      style="width: auto"
+      [(ngModel)]="pageSize"
+      (ngModelChange)="refreshCountries()"
+    >
+      <option [ngValue]="2">2 items per page</option>
+      <option [ngValue]="4">4 items per page</option>
+      <option [ngValue]="6">6 items per page</option>
+    </select>
+  </div> -->
+</div>
