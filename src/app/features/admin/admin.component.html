@@ -2,48 +2,124 @@
   <h5 class="mb-4">{{ activeCategory?.name }}</h5>
   <div [ngSwitch]="activeCategory.link">
     <div *ngSwitchCase="'category'">
-      <table class="table table-striped">
+      <button nz-button (click)="addRow()" nzType="primary">
+        Thêm loại cây
+      </button>
+      <br />
+      <br />
+      <nz-table #editRowTable nzBordered [nzData]="listCategories">
         <thead>
           <tr>
-            <th scope="col-1">STT</th>
-            <th scope="col-9">Tên danh mục</th>
-            <th scope="col-2">Thao tác</th>
+            <th>STT</th>
+            <th>Tên danh mục</th>
+            <th>Thao tác</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let category of listCategories">
-            <th scope="row">{{ category.id }}</th>
-            <td>{{ category?.name }}</td>
-            <td class="d-flex gap-3">
-              <button type="button" class="btn btn-success mr-4">
-                Chỉnh sửa
-              </button>
-              <button type="button" class="btn btn-success">Xoá</button>
+          <tr *ngFor="let data of listCategories" class="editable-row">
+            <td>
+              {{ data?.id }}
+            </td>
+            <td>{{ data?.name }}</td>
+            <td>
+              <div class="d-flex gap-1">
+                <button nz-button nzType="primary" class="mr-1">
+                  Chỉnh sửa
+                </button>
+                <button
+                  nz-button
+                  nzType="primary"
+                  nz-popconfirm
+                  nzPopconfirmTitle="Bạn có muốn xoá"
+                  (nzOnConfirm)="deleteRow(data.id)"
+                >
+                  <span>Xoá</span>
+                </button>
+              </div>
             </td>
           </tr>
         </tbody>
-      </table>
+      </nz-table>
+    </div>
+    <div *ngSwitchCase="'tree'">
+      <button nz-button (click)="addRow()" nzType="primary">
+        Thêm cây cảnh
+      </button>
+      <br />
+      <br />
+      <nz-table #editRowTable nzBordered [nzData]="listTree">
+        <thead>
+          <tr>
+            <th>Tên cây cảnh</th>
+            <th>Hình ảnh</th>
+            <th>Giá</th>
+            <th>Số lượng</th>
+            <th>Thao tác</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of listTree" class="editable-row">
+            <td>
+              <div
+                class="editable-cell"
+                [hidden]="editId === data.id"
+                (click)="startEdit(data.id)"
+              >
+                {{ data.name }}
+              </div>
+              <input
+                [hidden]="editId !== data.id"
+                type="text"
+                nz-input
+                [(ngModel)]="data.name"
+                (blur)="stopEdit()"
+              />
+            </td>
+            <td>
+              <img [src]="data.image" alt="#" style="height: 100px" />
+            </td>
+            <td>{{ data.price }}</td>
+            <td>{{ data.inStock }}</td>
+            <td>
+              <div class="d-flex gap-1">
+                <button nz-button nzType="primary" class="mr-1">
+                  Chỉnh sửa
+                </button>
+                <button
+                  nz-button
+                  nzType="primary"
+                  nz-popconfirm
+                  nzPopconfirmTitle="Bạn có muốn xoá"
+                  (nzOnConfirm)="deleteRow(data.id)"
+                >
+                  <span>Xoá</span>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </div>
+    <div *ngSwitchCase="'client'">
+      <nz-table #editRowTable nzBordered [nzData]="listClient">
+        <thead>
+          <tr>
+            <th>STT</th>
+            <th>Email</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let data of listClient; index as index"
+            class="editable-row"
+          >
+            <td>
+              {{ index + 1 }}
+            </td>
+            <td>{{ data?.email }}</td>
+          </tr>
+        </tbody>
+      </nz-table>
     </div>
   </div>
-
-  <!-- <div class="d-flex justify-content-between p-2">
-    <ngb-pagination
-      [collectionSize]="collectionSize"
-      [(page)]="page"
-      [pageSize]="pageSize"
-      (pageChange)="refreshCountries()"
-    >
-    </ngb-pagination>
-
-    <select
-      class="form-select"
-      style="width: auto"
-      [(ngModel)]="pageSize"
-      (ngModelChange)="refreshCountries()"
-    >
-      <option [ngValue]="2">2 items per page</option>
-      <option [ngValue]="4">4 items per page</option>
-      <option [ngValue]="6">6 items per page</option>
-    </select>
-  </div> -->
 </div>

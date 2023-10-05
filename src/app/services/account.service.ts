@@ -34,4 +34,13 @@ export class AccountService {
   registerAccount(body: any) {
     return this.http.post<any>(`${this.apiUrl}/auth/register`, body);
   }
+
+  getAllCustomer() {
+    const queryParams = [{ operator: 'eq', value: 'customer', prop: 'role' }];
+    return this.http.get<any>(`${this.apiUrl}/users`, {
+      params: {
+        filer: queryParams
+      }
+    });
+  }
 }

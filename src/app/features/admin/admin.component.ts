@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { COUNTRIES, Country } from '../cart/cart.component';
 import { TreeService } from 'src/app/services/tree.service';
+import { AccountService } from 'src/app/services/account.service';
 
 @Component({
   selector: 'app-admin',
@@ -24,10 +25,19 @@ export class AdminComponent implements OnInit {
   countries!: Country[];
   listCategories: any[] = [];
 
+  //tree
+  i = 0;
+  editId: string | null = null;
+  listOfData: ItemData[] = [];
+  listTree: any[] = [];
+
+  //client
+  listClient: any[] = [];
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private treeService: TreeService
+    private treeService: TreeService,
+    private accountService: AccountService
   ) {
     const currentUser = JSON.parse(
       window.localStorage.getItem('currentUser') || '{}'
@@ -53,7 +63,15 @@ export class AdminComponent implements OnInit {
           this.listCategories = res?.rows;
         });
       }
+      if (this.activeCategory.link === 'tree') {
+        this.getListTree();
+      }
+      if (this.activeCategory.link === 'client') {
+        this.getAllClient();
+      }
     });
+    //tree
+    this.addRow();
   }
 
   refreshCountries() {
@@ -65,4 +83,50 @@ export class AdminComponent implements OnInit {
       (this.page - 1) * this.pageSize + this.pageSize
     );
   }
+
+  /* tree */
+  getListTree() {
+    this.treeService
+      .getAllTree()
+      .subscribe((tree) => (this.listTree = tree.rows));
+  }
+  startEdit(id: string): void {
+    this.editId = id;
+  }
+
+  stopEdit(): void {
+    this.editId = null;
+  }
+
+  addRow(): void {
+    // this.listOfData = [
+    //   ...this.listOfData,
+    //   {
+    //     id: `${this.i}`,
+    //     name: `Edward King ${this.i}`,
+    //     age: '32',
+    //     address: `London, Park Lane no. ${this.i}`
+    //   }
+    // ];
+    // this.i++;
+  }
+
+  deleteRow(id: string): void {
+    this.listOfData = this.listOfData.filter((d) => d.id !== id);
+  }
+  /* end tree*/
+
+  //client
+  getAllClient() {
+    this.accountService
+      .getAllCustomer()
+      .subscribe((client) => (this.listClient = client.rows));
+  }
+}
+
+interface ItemData {
+  id: string;
+  name: string;
+  age: string;
+  address: string;
 }

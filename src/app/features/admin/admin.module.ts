@@ -7,6 +7,9 @@ import {
   NgbTypeaheadModule
 } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
+import { NzTableModule } from 'ng-zorro-antd/table';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 
 @NgModule({
   imports: [
@@ -14,7 +17,10 @@ import { FormsModule } from '@angular/forms';
     AdminRoutes,
     NgbTypeaheadModule,
     NgbPaginationModule,
-    FormsModule
+    FormsModule,
+    NzTableModule,
+    NzButtonModule,
+    NzPopconfirmModule
   ],
   declarations: [AdminComponent]
 })
