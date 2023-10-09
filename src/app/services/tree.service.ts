@@ -19,11 +19,30 @@ export class TreeService {
     return this.http.post(`${this.apiUrl}/categories`, body);
   }
 
+  editCategories(body: any, id: string): Observable<any> {
+    return this.http.put(`${this.apiUrl}/categories/update/${id}`, body);
+  }
+
   getAllTree(): Observable<any> {
     return this.http.get(`${this.apiUrl}/tree`);
   }
 
+  createTree(body: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/tree`, body);
+  }
+
+  editTree(body: any, id: string): Observable<any> {
+    return this.http.put(`${this.apiUrl}/tree/update/${id}`, body);
+  }
+
   getTreeByCategory(categoryID: any): Observable<any> {
     return this.http.get(`${this.apiUrl}/tree/listByCategory/${categoryID}`);
+  }
+
+  deleteCategory(id: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/categories/delete/${id}`);
+  }
+  deleteTree(id: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/tree/delete/${id}`);
   }
 }

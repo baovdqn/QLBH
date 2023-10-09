@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BehaviorSubject } from 'rxjs';
-import { CartsService } from 'src/app/services/carts.service';
+import { AccountService } from 'src/app/services/account.service';
 import { CoreService } from 'src/app/services/core.service';
 import { LoginComponent } from '../login/login.component';
 import { RegisterComponent } from '../register/register.component';
-import { Router } from '@angular/router';
-import { AccountService } from 'src/app/services/account.service';
 
 @Component({
   selector: 'app-header',

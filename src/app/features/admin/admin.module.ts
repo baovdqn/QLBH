@@ -1,15 +1,13 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AdminComponent } from './admin.component';
-import { AdminRoutes } from './admin.routing';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   NgbPaginationModule,
   NgbTypeaheadModule
 } from '@ng-bootstrap/ng-bootstrap';
-import { FormsModule } from '@angular/forms';
-import { NzTableModule } from 'ng-zorro-antd/table';
-import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
+import { DemoNgZorroAntdModule } from 'src/app/ng-zorro/ng-zorro.module';
+import { AdminComponent } from './admin.component';
+import { AdminRoutes } from './admin.routing';
 
 @NgModule({
   imports: [
@@ -18,10 +16,10 @@ import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
     NgbTypeaheadModule,
     NgbPaginationModule,
     FormsModule,
-    NzTableModule,
-    NzButtonModule,
-    NzPopconfirmModule
+    ReactiveFormsModule,
+    DemoNgZorroAntdModule
   ],
-  declarations: [AdminComponent]
+  declarations: [AdminComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AdminModule {}

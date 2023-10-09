@@ -1,5 +1,5 @@
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgbDropdownModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AppRoutingModule } from './app-routing.module';
@@ -18,6 +18,8 @@ import { en_US } from 'ng-zorro-antd/i18n';
 import { registerLocaleData } from '@angular/common';
 import en from '@angular/common/locales/en';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NzModalModule } from 'ng-zorro-antd/modal';
+import { DemoNgZorroAntdModule } from './ng-zorro/ng-zorro.module';
 
 registerLocaleData(en);
 
@@ -36,13 +38,16 @@ registerLocaleData(en);
     HttpClientModule,
     NgbModule,
     FormsModule,
+    ReactiveFormsModule,
     ProductsModule,
     NgbDropdownModule,
     AdminModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    DemoNgZorroAntdModule
   ],
   providers: [HttpInterceptor, { provide: NZ_I18N, useValue: en_US }],
   bootstrap: [AppComponent],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  exports: []
 })
 export class AppModule {}

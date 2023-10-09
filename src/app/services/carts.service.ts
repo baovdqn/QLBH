@@ -7,5 +7,5 @@ import { Product } from '../features/products/product/product.component';
 })
 export class CartsService {
   constructor() {}
-  carts$: BehaviorSubject<Array<Product>> = new BehaviorSubject<Product[]>([]);
+  carts$: BehaviorSubject<Array<Product>> = new BehaviorSubject<any[]>([]);
 }

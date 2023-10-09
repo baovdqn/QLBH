@@ -7,15 +7,10 @@ import {
   NgbPaginationModule
 } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
+import { DemoNgZorroAntdModule } from 'src/app/ng-zorro/ng-zorro.module';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    CartRoutes,
-    NgbTypeaheadModule,
-    NgbPaginationModule,
-    FormsModule
-  ],
+  imports: [CommonModule, CartRoutes, FormsModule, DemoNgZorroAntdModule],
   declarations: [CartComponent]
 })
 export class CartModule {}

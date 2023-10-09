@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Product } from '../product/product.component';
 import { dataFake } from './data';
+import { TreeService } from 'src/app/services/tree.service';
 
 @Component({
   selector: 'app-home',
@@ -8,8 +9,12 @@ import { dataFake } from './data';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-  constructor() {}
+  constructor(private treeService: TreeService) {}
 
-  listProduct: Product[] = dataFake;
-  ngOnInit() {}
+  listProduct: Product[] = [];
+  ngOnInit() {
+    this.treeService
+      .getAllTree()
+      .subscribe((data) => (this.listProduct = data.rows));
+  }
 }

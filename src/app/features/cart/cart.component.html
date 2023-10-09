@@ -1,52 +1,27 @@
 <div class="cart-container">
   <h5>Giỏ hàng</h5>
-  <h6>Danh mục sản phẩm</h6>
-  <table class="table table-striped">
+  <div class="d-flex justify-content-between">
+    <h6>Danh mục sản phẩm</h6>
+    <h6>Tổng tiền: {{ sumPrice | number : '1.0-0' }}</h6>
+  </div>
+  <nz-table #basicTable [nzData]="carts">
     <thead>
       <tr>
-        <th scope="col">STT</th>
-        <th scope="col">Ảnh</th>
-        <th scope="col">Tên Sản phẩm</th>
-        <th scope="col">Giá tiền</th>
+        <th>STT</th>
+        <th>Ảnh</th>
+        <th>Tên sản phẩm</th>
+        <th>Giá tiền</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let country of countries">
-        <th scope="row">{{ country.id }}</th>
-        <td>
-          <img
-            [src]="
-              'https://upload.wikimedia.org/wikipedia/commons/' + country.flag
-            "
-            class="me-2"
-            style="width: 20px"
-          />
-          {{ country.name }}
+      <tr *ngFor="let data of carts; index as index">
+        <td>{{ index + 1 }}</td>
+        <td style="width: 20%">
+          <img style="height: 100px; width: 100px" [src]="data.image" alt="" />
         </td>
-        <td>{{ country.area | number }}</td>
-        <td>{{ country.population | number }}</td>
+        <td>{{ data.name }}</td>
+        <td>{{ data.price | number : '1.0-0' }}</td>
       </tr>
     </tbody>
-  </table>
-
-  <div class="d-flex justify-content-between p-2">
-    <ngb-pagination
-      [collectionSize]="collectionSize"
-      [(page)]="page"
-      [pageSize]="pageSize"
-      (pageChange)="refreshCountries()"
-    >
-    </ngb-pagination>
-
-    <select
-      class="form-select"
-      style="width: auto"
-      [(ngModel)]="pageSize"
-      (ngModelChange)="refreshCountries()"
-    >
-      <option [ngValue]="2">2 items per page</option>
-      <option [ngValue]="4">4 items per page</option>
-      <option [ngValue]="6">6 items per page</option>
-    </select>
-  </div>
+  </nz-table>
 </div>

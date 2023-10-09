@@ -2,7 +2,7 @@
   <h5 class="mb-4">{{ activeCategory?.name }}</h5>
   <div [ngSwitch]="activeCategory.link">
     <div *ngSwitchCase="'category'">
-      <button nz-button (click)="addRow()" nzType="primary">
+      <button nz-button (click)="addCategory()" nzType="primary">
         Thêm loại cây
       </button>
       <br />
@@ -16,14 +16,22 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let data of listCategories" class="editable-row">
+          <tr
+            *ngFor="let data of listCategories; index as index"
+            class="editable-row"
+          >
             <td>
-              {{ data?.id }}
+              {{ index + 1 }}
             </td>
             <td>{{ data?.name }}</td>
             <td>
               <div class="d-flex gap-1">
-                <button nz-button nzType="primary" class="mr-1">
+                <button
+                  nz-button
+                  nzType="primary"
+                  class="mr-1"
+                  (click)="editCategory(data)"
+                >
                   Chỉnh sửa
                 </button>
                 <button
@@ -31,7 +39,7 @@
                   nzType="primary"
                   nz-popconfirm
                   nzPopconfirmTitle="Bạn có muốn xoá"
-                  (nzOnConfirm)="deleteRow(data.id)"
+                  (nzOnConfirm)="deleteCategory(data.id)"
                 >
                   <span>Xoá</span>
                 </button>
@@ -42,7 +50,7 @@
       </nz-table>
     </div>
     <div *ngSwitchCase="'tree'">
-      <button nz-button (click)="addRow()" nzType="primary">
+      <button nz-button (click)="openModalTree()" nzType="primary">
         Thêm cây cảnh
       </button>
       <br />
@@ -54,6 +62,8 @@
             <th>Hình ảnh</th>
             <th>Giá</th>
             <th>Số lượng</th>
+            <th>Mô tả</th>
+            <th>Loại cây</th>
             <th>Thao tác</th>
           </tr>
         </thead>
@@ -80,9 +90,18 @@
             </td>
             <td>{{ data.price }}</td>
             <td>{{ data.inStock }}</td>
+            <td>{{ data.description }}</td>
+            <td>
+              {{ data.categories?.length ? data.categories[0]?.name : '' }}
+            </td>
             <td>
               <div class="d-flex gap-1">
-                <button nz-button nzType="primary" class="mr-1">
+                <button
+                  nz-button
+                  nzType="primary"
+                  class="mr-1"
+                  (click)="editTree(data)"
+                >
                   Chỉnh sửa
                 </button>
                 <button
@@ -90,7 +109,7 @@
                   nzType="primary"
                   nz-popconfirm
                   nzPopconfirmTitle="Bạn có muốn xoá"
-                  (nzOnConfirm)="deleteRow(data.id)"
+                  (nzOnConfirm)="deleteTree(data.id)"
                 >
                   <span>Xoá</span>
                 </button>
@@ -121,5 +140,182 @@
         </tbody>
       </nz-table>
     </div>
+    <div *ngSwitchCase="'staff'">
+      <nz-table #editRowTable nzBordered [nzData]="listStaff">
+        <thead>
+          <tr>
+            <th>STT</th>
+            <th>Email</th>
+            <th>Họ tên</th>
+            <th>Số điện thoại</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let data of listStaff; index as index"
+            class="editable-row"
+          >
+            <td>
+              {{ index + 1 }}
+            </td>
+            <td>{{ data?.email }}</td>
+            <td>{{ 'example' }}</td>
+            <td>{{ 'example' }}</td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </div>
   </div>
 </div>
+
+<nz-modal
+  [(nzVisible)]="isVisible"
+  nzTitle="Thêm loại cây"
+  (nzOnCancel)="handleCancel()"
+  (nzOnOk)="handleAddCategory()"
+>
+  <ng-container *nzModalContent>
+    <form #form="ngForm">
+      <div nz-form-item class="d-flex gap-2 mb-2">
+        <label for="name" style="width: 100px">Tên loại cây:</label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          [(ngModel)]="formCategory.name"
+          required
+          style="
+            height: 32px;
+            flex: 1;
+            border: 1px solid #dddddd;
+            padding: 0 12px;
+          "
+        />
+      </div>
+      <div nz-form-item class="d-flex gap-2">
+        <label for="status" style="width: 100px">Trạng thái:</label>
+        <nz-select
+          id="status"
+          name="status"
+          [(ngModel)]="formCategory.active"
+          required
+          style="height: 32px; flex: 1; border: 1px solid #dddddd"
+        >
+          <nz-option nzLabel="Hoạt động" [nzValue]="true"></nz-option>
+          <nz-option nzLabel="Ngưng hoạt động" [nzValue]="false"></nz-option>
+        </nz-select>
+      </div>
+    </form>
+  </ng-container>
+</nz-modal>
+
+<nz-modal
+  [(nzVisible)]="openModalAddTree"
+  nzTitle="Thêm cây cảnh"
+  (nzOnCancel)="handleCancelTree()"
+  (nzOnOk)="handleAddTree()"
+>
+  <ng-container *nzModalContent>
+    <form #form="ngForm">
+      <div nz-form-item class="d-flex gap-2 mb-2">
+        <label for="name" style="width: 100px">Tên cây cảnh:</label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          [(ngModel)]="formTree.name"
+          required
+          style="
+            height: 32px;
+            flex: 1;
+            border: 1px solid #dddddd;
+            padding: 0 10px;
+          "
+        />
+      </div>
+      <div nz-form-item class="d-flex gap-2 mb-2">
+        <label for="inStock" style="width: 100px">Số lượng:</label>
+        <input
+          type="number"
+          id="inStock"
+          name="inStock"
+          [(ngModel)]="formTree.inStock"
+          required
+          style="
+            height: 32px;
+            flex: 1;
+            border: 1px solid #dddddd;
+            padding: 0 10px;
+          "
+        />
+      </div>
+      <div nz-form-item class="d-flex gap-2 mb-2">
+        <label for="price" style="width: 100px">Giá tiền:</label>
+        <input
+          type="number"
+          id="price"
+          name="price"
+          [(ngModel)]="formTree.price"
+          required
+          style="
+            height: 32px;
+            flex: 1;
+            border: 1px solid #dddddd;
+            padding: 0 10px;
+          "
+        />
+      </div>
+      <div nz-form-item class="d-flex gap-2 mb-2">
+        <label for="image" style="width: 100px">Hình ảnh:</label>
+        <input
+          type="text"
+          id="image"
+          name="image"
+          [(ngModel)]="formTree.image"
+          required
+          style="
+            height: 32px;
+            flex: 1;
+            border: 1px solid #dddddd;
+            padding: 0 10px;
+          "
+        />
+      </div>
+      <div nz-form-item class="d-flex gap-2 mb-2">
+        <label for="description" style="width: 100px">Mô tả:</label>
+        <nz-textarea-count
+          [nzMaxCharacterCount]="1500"
+          style="display: flex; flex-direction: column; flex: 1"
+        >
+          <textarea
+            type="text"
+            id="description"
+            name="description"
+            [(ngModel)]="formTree.description"
+            required
+            nz-input
+            placeholder="write any thing"
+            style="flex: 1"
+          ></textarea>
+        </nz-textarea-count>
+      </div>
+      <div nz-form-item class="d-flex gap-2">
+        <label for="categories" style="width: 100px">Loại cây: </label>
+        <nz-select
+          id="categories"
+          name="categories"
+          [(ngModel)]="formTree.categories[0]"
+          (ngModelChange)="categoriesChange($event)"
+          required
+          style="height: 32px; flex: 1; border: 1px solid #dddddd"
+        >
+          <nz-option
+            [nzLabel]="category.name"
+            [nzValue]="category.id"
+            *ngFor="let category of listCategories"
+          ></nz-option>
+        </nz-select>
+      </div>
+    </form>
+  </ng-container>
+</nz-modal>

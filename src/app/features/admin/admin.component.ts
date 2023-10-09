@@ -1,9 +1,10 @@
 import { query } from '@angular/animations';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { COUNTRIES, Country } from '../cart/cart.component';
+// import { COUNTRIES, Country } from '../cart/cart.component';
 import { TreeService } from 'src/app/services/tree.service';
 import { AccountService } from 'src/app/services/account.service';
+import { NzModalService } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-admin',
@@ -21,8 +22,8 @@ export class AdminComponent implements OnInit {
   activeCategory: any;
   page = 1;
   pageSize = 6;
-  collectionSize = COUNTRIES.length;
-  countries!: Country[];
+  // collectionSize = COUNTRIES.length;
+  // countries!: Country[];
   listCategories: any[] = [];
 
   //tree
@@ -33,11 +34,39 @@ export class AdminComponent implements OnInit {
 
   //client
   listClient: any[] = [];
+  //staff: nhân viên
+  listStaff: any[] = [];
+  isVisible: boolean = false;
+
+  //test
+
+  // isVisible = false;
+  formCategory = {
+    name: '',
+    active: true
+  };
+  idCategory!: any;
+  idTree!: any;
+  isEditCategory: boolean = false;
+  isEditTree: boolean = false;
+  openModalAddTree: boolean = false;
+
+  formTree = {
+    name: '',
+    description: '',
+    price: 0,
+    inStock: 0,
+    image: '',
+    categories: [] as any,
+    active: true
+  };
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private treeService: TreeService,
-    private accountService: AccountService
+    private accountService: AccountService,
+    private modal: NzModalService
   ) {
     const currentUser = JSON.parse(
       window.localStorage.getItem('currentUser') || '{}'
@@ -69,20 +98,82 @@ export class AdminComponent implements OnInit {
       if (this.activeCategory.link === 'client') {
         this.getAllClient();
       }
+      if (this.activeCategory.link === 'staff') {
+        this.getAllAdmin();
+      }
     });
     //tree
-    this.addRow();
   }
 
-  refreshCountries() {
-    this.countries = COUNTRIES.map((country, i) => ({
-      id: i + 1,
-      ...country
-    })).slice(
-      (this.page - 1) * this.pageSize,
-      (this.page - 1) * this.pageSize + this.pageSize
+  // refreshCountries() {
+  //   this.countries = COUNTRIES.map((country, i) => ({
+  //     id: i + 1,
+  //     ...country
+  //   })).slice(
+  //     (this.page - 1) * this.pageSize,
+  //     (this.page - 1) * this.pageSize + this.pageSize
+  //   );
+  // }
+
+  //category
+  addCategory() {
+    this.isVisible = true;
+  }
+
+  editCategory(data: any) {
+    this.formCategory = {
+      name: data.name,
+      active: data.active
+    };
+    this.isEditCategory = true;
+    this.idCategory = data.id;
+    this.addCategory();
+  }
+
+  deleteCategory(id: string) {
+    this.treeService.deleteCategory(id).subscribe(
+      (res) => {
+        this.treeService.getCategories().subscribe((res: any) => {
+          this.listCategories = res?.rows;
+        });
+      },
+      (err) => {
+        this.treeService.getCategories().subscribe((res: any) => {
+          this.listCategories = res?.rows;
+        });
+      }
     );
   }
+
+  handleAddCategory() {
+    if (!this.isValid()) return;
+    if (this.isEditCategory) {
+      this.treeService
+        .editCategories(this.formCategory, this.idCategory)
+        .subscribe((res) => {
+          this.treeService.getCategories().subscribe((res: any) => {
+            this.listCategories = res?.rows;
+          });
+          this.handleCancel();
+        });
+    } else {
+      this.treeService.createCategories(this.formCategory).subscribe((res) => {
+        this.treeService.getCategories().subscribe((res: any) => {
+          this.listCategories = res?.rows;
+        });
+        this.handleCancel();
+      });
+    }
+  }
+
+  categoriesChange(event: any) {
+    this.formTree = {
+      ...this.formTree,
+      categories: [event]
+    };
+    console.log(this.formTree);
+  }
+  //end category
 
   /* tree */
   getListTree() {
@@ -98,29 +189,107 @@ export class AdminComponent implements OnInit {
     this.editId = null;
   }
 
-  addRow(): void {
-    // this.listOfData = [
-    //   ...this.listOfData,
-    //   {
-    //     id: `${this.i}`,
-    //     name: `Edward King ${this.i}`,
-    //     age: '32',
-    //     address: `London, Park Lane no. ${this.i}`
-    //   }
-    // ];
-    // this.i++;
+  deleteTree(id: string): void {
+    this.treeService.deleteTree(id).subscribe();
+    this.getListTree();
   }
 
-  deleteRow(id: string): void {
-    this.listOfData = this.listOfData.filter((d) => d.id !== id);
+  openModalTree() {
+    this.openModalAddTree = true;
+  }
+
+  handleCancelTree() {
+    this.openModalAddTree = false;
+    this.formTree = {
+      name: '',
+      description: '',
+      price: 0,
+      inStock: 0,
+      image: '',
+      categories: [] as any,
+      active: true
+    };
+  }
+
+  editTree(data: any) {
+    this.formTree = {
+      name: data.name,
+      description: data.description,
+      price: data.price,
+      inStock: data.inStock,
+      image: data.image,
+      categories: data.categories,
+      active: true
+    };
+    this.isEditTree = true;
+    this.idTree = data.id;
+    this.openModalTree();
   }
   /* end tree*/
 
   //client
   getAllClient() {
     this.accountService
-      .getAllCustomer()
-      .subscribe((client) => (this.listClient = client.rows));
+      .getAccountForRole('customer')
+      .subscribe((client: any) => (this.listClient = client.rows));
+  }
+  getAllAdmin() {
+    this.accountService
+      .getAccountForRole('admin')
+      .subscribe((client: any) => (this.listStaff = client.rows));
+  }
+
+  //123123
+
+  // Mở modal
+  showModal(): void {
+    this.isVisible = true;
+  }
+
+  // Đóng modal và xóa dữ liệu trong form
+  handleCancel(): void {
+    this.isVisible = false;
+    this.isEditCategory = false;
+    this.resetForm();
+  }
+
+  // Xử lý khi nhấn nút "Lưu"
+  handleOk(): void {
+    if (this.isValid()) {
+      // Thực hiện lưu dữ liệu ở đây (ví dụ: gửi dữ liệu lên server)
+      // Sau khi lưu xong, đóng modal và xóa dữ liệu trong form
+      this.isVisible = false;
+      this.resetForm();
+    }
+  }
+
+  // Kiểm tra tính hợp lệ của form
+  isValid(): boolean {
+    return (
+      this.formCategory.name.trim() !== '' && this.formCategory.active !== null
+    );
+  }
+
+  // Xóa dữ liệu trong form
+  resetForm(): void {
+    this.formCategory = {
+      name: '',
+      active: true
+    };
+  }
+
+  handleAddTree() {
+    if (this.isEditTree) {
+      this.treeService.editTree(this.formTree, this.idTree).subscribe((res) => {
+        this.getListTree();
+        this.handleCancelTree();
+      });
+    } else {
+      this.treeService.createTree(this.formTree).subscribe((res) => {
+        this.getListTree();
+        this.handleCancelTree();
+      });
+    }
   }
 }
 
