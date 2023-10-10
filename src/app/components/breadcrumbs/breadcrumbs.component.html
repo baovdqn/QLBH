@@ -1,7 +1,14 @@
 <div class="d-flex justify-content-between">
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item active" aria-current="page">Trang chủ</li>
+      <li
+        class="breadcrumb-item"
+        aria-current="page"
+        *ngFor="let name of list; last as last"
+        [ngClass]="{ active: last }"
+      >
+        {{ name }}
+      </li>
     </ol>
   </nav>
   <a

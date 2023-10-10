@@ -53,4 +53,8 @@ export class SidebarComponent implements OnInit {
     const url = `/admin?manage=${link}`;
     this.router.navigateByUrl(url);
   }
+
+  goToCategory(category: any) {
+    this.router.navigateByUrl('/products/category?c=' + category.id);
+  }
 }

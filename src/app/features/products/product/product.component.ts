@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { CartsService } from 'src/app/services/carts.service';
 
 @Component({
@@ -8,7 +9,7 @@ import { CartsService } from 'src/app/services/carts.service';
 })
 export class ProductComponent implements OnInit {
   @Input() product!: any;
-  constructor(private cartsService: CartsService) {}
+  constructor(private cartsService: CartsService, private router: Router) {}
 
   ngOnInit() {}
 
@@ -16,6 +17,10 @@ export class ProductComponent implements OnInit {
     let cart = this.cartsService.carts$.value;
     cart.push(product);
     this.cartsService.carts$.next(cart);
+  }
+
+  goToDetail(product: any) {
+    this.router.navigateByUrl('/products/detail?p=' + product.id);
   }
 }
 

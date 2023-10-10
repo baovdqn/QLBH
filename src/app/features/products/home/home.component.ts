@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Product } from '../product/product.component';
-import { dataFake } from './data';
 import { TreeService } from 'src/app/services/tree.service';
+import { Product } from '../product/product.component';
 
 @Component({
   selector: 'app-home',

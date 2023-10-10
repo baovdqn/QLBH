@@ -10,9 +10,11 @@
           class="list-group-item list-group-item-action"
           *ngFor="let category of listCategory"
         >
-          <a class="nav-link d-block pointer" [routerLink]="category?.id">{{
-            category.name
-          }}</a>
+          <a
+            class="nav-link d-block pointer"
+            (click)="goToCategory(category)"
+            >{{ category.name }}</a
+          >
         </li>
       </ul>
     </div>

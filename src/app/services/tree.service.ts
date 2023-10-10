@@ -23,6 +23,10 @@ export class TreeService {
     return this.http.put(`${this.apiUrl}/categories/update/${id}`, body);
   }
 
+  detailCategory(id: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/categories/detail/${id}`);
+  }
+
   getAllTree(): Observable<any> {
     return this.http.get(`${this.apiUrl}/tree`);
   }
@@ -33,6 +37,10 @@ export class TreeService {
 
   editTree(body: any, id: string): Observable<any> {
     return this.http.put(`${this.apiUrl}/tree/update/${id}`, body);
+  }
+
+  detailTree(id: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/tree/detail/${id}`);
   }
 
   getTreeByCategory(categoryID: any): Observable<any> {

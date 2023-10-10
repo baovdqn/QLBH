@@ -6,6 +6,8 @@ import { ProductRoutes } from './product.routing';
 import { BreadcrumbsComponent } from 'src/app/components/breadcrumbs/breadcrumbs.component';
 import { RouterModule } from '@angular/router';
 import { ProductComponent } from './product/product.component';
+import { DetailProductComponent } from './detail-product/detail-product.component';
+import { CategoryDetailComponent } from './category-detail/category-detail.component';
 
 @NgModule({
   imports: [CommonModule, RouterModule, ProductRoutes],
@@ -13,7 +15,9 @@ import { ProductComponent } from './product/product.component';
     ProductsComponent,
     HomeComponent,
     BreadcrumbsComponent,
-    ProductComponent
+    ProductComponent,
+    DetailProductComponent,
+    CategoryDetailComponent
   ]
 })
 export class ProductsModule {}
