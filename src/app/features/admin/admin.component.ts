@@ -239,7 +239,9 @@ export class AdminComponent implements OnInit {
       .subscribe((client: any) => (this.listStaff = client.rows));
   }
 
-  //123123
+  addClient(): void {
+    console.log('addClient');
+  }
 
   // Mở modal
   showModal(): void {

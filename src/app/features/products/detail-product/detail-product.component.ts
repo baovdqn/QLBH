@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap } from 'rxjs';
+import { CartsService } from 'src/app/services/carts.service';
 import { TreeService } from 'src/app/services/tree.service';
 
 @Component({
@@ -14,7 +15,8 @@ export class DetailProductComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private treeService: TreeService
+    private treeService: TreeService,
+    private cartService: CartsService
   ) {}
 
   ngOnInit() {
@@ -27,5 +29,10 @@ export class DetailProductComponent implements OnInit {
       .subscribe((res) => {
         this.product = res;
       });
+  }
+  addToCart(product: any) {
+    let cart = this.cartService.carts$.value;
+    cart.push(product);
+    this.cartService.carts$.next(cart);
   }
 }

@@ -120,6 +120,11 @@
       </nz-table>
     </div>
     <div *ngSwitchCase="'client'">
+      <button nz-button (click)="addClient()" nzType="primary">
+        Thêm khách hàng
+      </button>
+      <br />
+      <br />
       <nz-table #editRowTable nzBordered [nzData]="listClient">
         <thead>
           <tr>
@@ -141,6 +146,11 @@
       </nz-table>
     </div>
     <div *ngSwitchCase="'staff'">
+      <button nz-button (click)="addClient()" nzType="primary">
+        Thêm nhân viên
+      </button>
+      <br />
+      <br />
       <nz-table #editRowTable nzBordered [nzData]="listStaff">
         <thead>
           <tr>

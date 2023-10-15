@@ -20,7 +20,15 @@ export class HeaderComponent implements OnInit {
     private accountService: AccountService
   ) {}
   noLogged$: BehaviorSubject<boolean> = this.coreService.noLogged$;
-  ngOnInit() {}
+  ngOnInit() {
+    this.accountService.currentUser.subscribe((user) => {
+      if (user?.id) {
+        this.coreService.noLogged$.next(false);
+      } else {
+        this.coreService.noLogged$.next(true);
+      }
+    });
+  }
 
   openFormLogin() {
     const modalRef = this.modalService.open(LoginComponent, {
