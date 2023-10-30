@@ -16,10 +16,21 @@ export class CartComponent implements OnInit {
   sumPrice: any = 0;
   constructor(private cartService: CartsService) {
     this.carts = this.cartService.carts$.value;
+    this.updatePrice();
+  }
+
+  updatePrice(): void {
     if (this.carts.length > 0) {
       this.sumPrice = this.carts.reduce((a: any, b: any) => {
         return a + b.price;
       }, 0);
     }
+  }
+
+  checkout() {}
+
+  clear(index: number, carts: any[]) {
+    carts = carts.splice(index, 1);
+    this.updatePrice();
   }
 }

@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -27,8 +27,20 @@ export class TreeService {
     return this.http.get(`${this.apiUrl}/categories/detail/${id}`);
   }
 
-  getAllTree(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/tree`);
+  getAllTree(query?: any, filter?: any): Observable<any> {
+    let queryParams = '';
+    if (query) {
+      queryParams = query;
+    }
+    return this.http.get(`${this.apiUrl}/tree${queryParams}`);
+  }
+
+  getTreeWithFilter(name: string) {
+    const filter = JSON.stringify([
+      { operator: 'iLike', value: name, prop: 'name' }
+    ]);
+    let queryParams = new HttpParams().set('filter', filter);
+    return this.http.get(`${this.apiUrl}/tree`, { params: queryParams });
   }
 
   createTree(body: any): Observable<any> {

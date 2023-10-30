@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BehaviorSubject } from 'rxjs';
 import { AccountService } from 'src/app/services/account.service';
@@ -17,9 +17,11 @@ export class HeaderComponent implements OnInit {
     private modalService: NgbModal,
     private coreService: CoreService,
     private router: Router,
-    private accountService: AccountService
+    private accountService: AccountService,
+    private route: ActivatedRoute
   ) {}
   noLogged$: BehaviorSubject<boolean> = this.coreService.noLogged$;
+  nameProduct: string = '';
   ngOnInit() {
     this.accountService.currentUser.subscribe((user) => {
       if (user?.id) {
@@ -49,5 +51,10 @@ export class HeaderComponent implements OnInit {
 
   manager() {
     this.router.navigate(['admin']);
+  }
+
+  searchItem() {
+    this.router.navigateByUrl(`/products/home?search=${this.nameProduct}`);
+    this.nameProduct = '';
   }
 }

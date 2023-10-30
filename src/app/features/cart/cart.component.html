@@ -1,26 +1,43 @@
 <div class="cart-container">
   <h5>Giỏ hàng</h5>
-  <div class="d-flex justify-content-between">
-    <h6>Danh mục sản phẩm</h6>
-    <h6>Tổng tiền: {{ sumPrice | number : '1.0-0' }}</h6>
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h6 class="m-0">Danh mục sản phẩm</h6>
+    <div class="d-flex gap-5 align-items-center">
+      <h6 class="m-0">Tổng tiền: {{ sumPrice | number : '1.0-0' }}</h6>
+      <button type="button" class="btn btn-success">
+        <span (click)="checkout()">Mua hàng</span>
+      </button>
+    </div>
   </div>
-  <nz-table #basicTable [nzData]="carts">
+  <nz-table #basicTable [nzData]="carts" nzShowPagination>
     <thead>
       <tr>
         <th>STT</th>
         <th>Ảnh</th>
         <th>Tên sản phẩm</th>
         <th>Giá tiền</th>
+        <th>Thao tác</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let data of carts; index as index">
+      <tr *ngFor="let data of basicTable.data; index as index">
         <td>{{ index + 1 }}</td>
         <td style="width: 20%">
           <img style="height: 100px; width: 100px" [src]="data.image" alt="" />
         </td>
         <td>{{ data.name }}</td>
         <td>{{ data.price | number : '1.0-0' }}</td>
+        <td>
+          <button
+            nz-button
+            nzType="primary"
+            nz-popconfirm
+            nzPopconfirmTitle="Bạn có muốn xoá sản phẩm này"
+            (nzOnConfirm)="clear(index, carts)"
+          >
+            <span>Xoá</span>
+          </button>
+        </td>
       </tr>
     </tbody>
   </nz-table>

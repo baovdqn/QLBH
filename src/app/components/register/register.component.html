@@ -7,19 +7,16 @@
     (click)="activeModal.dismiss('Cross click')"
   ></button>
 </div>
+<ngb-alert *ngIf="showAlert" [type]="'danger'">{{
+  'Lỗi khi đăng kí'
+}}</ngb-alert>
+<ngb-alert
+  *ngIf="formData.repassword != '' && formData.password != formData.repassword"
+  [type]="'danger'"
+  >{{ 'Nhập lại mật khẩu chưa đúng' }}</ngb-alert
+>
 <div class="modal-body">
   <form>
-    <div class="form-group">
-      <label for="username">Username:</label>
-      <input
-        type="text"
-        id="username"
-        name="username"
-        class="form-control mt-2"
-        [(ngModel)]="formData.username"
-        required
-      />
-    </div>
     <div class="form-group">
       <label for="email">Email:</label>
       <input
@@ -31,14 +28,47 @@
         required
       />
     </div>
-    <div class="form-group">
-      <label for="password">Password:</label>
+    <div class="form-group mt-2">
+      <label for="password">Mật khẩu:</label>
       <input
         type="password"
         id="password"
         name="password"
         class="form-control mt-2"
         [(ngModel)]="formData.password"
+        required
+      />
+    </div>
+    <div class="form-group mt-2">
+      <label for="password">Nhập lại mật khẩu:</label>
+      <input
+        type="password"
+        id="password"
+        name="password"
+        class="form-control mt-2"
+        [(ngModel)]="formData.repassword"
+        required
+      />
+    </div>
+    <div class="form-group mt-2">
+      <label for="fullName">Họ và tên:</label>
+      <input
+        type="text"
+        id="fullName"
+        name="fullName"
+        class="form-control mt-2"
+        [(ngModel)]="formData.fullName"
+        required
+      />
+    </div>
+    <div class="form-group mt-2">
+      <label for="phoneNumber">Số điện thoại:</label>
+      <input
+        type="text"
+        id="phoneNumber"
+        name="phoneNumber"
+        class="form-control mt-2"
+        [(ngModel)]="formData.phoneNumber"
         required
       />
     </div>

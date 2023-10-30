@@ -30,9 +30,8 @@ export class AccountService {
     localStorage.removeItem('currentUser');
     this.currentUserSubject.next(null);
   }
-
-  registerAccount(body: any) {
-    return this.http.post<any>(`${this.apiUrl}/auth/register`, body);
+  registerAccountCustomer(body: any) {
+    return this.http.post<any>(`${this.apiUrl}/users`, body);
   }
 
   getAccountForRole(role: string) {

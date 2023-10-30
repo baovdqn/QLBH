@@ -1,7 +1,17 @@
 <div class="row g-3">
-  <app-product
+  <!-- <app-product
     [product]="product"
     *ngFor="let product of listProduct"
     class="col-4"
-  ></app-product>
+  ></app-product> -->
+  <ng-container *ngIf="listProduct.length; else empty">
+    <app-product
+      [product]="product"
+      *ngFor="let product of listProduct"
+      class="col-4"
+    ></app-product>
+  </ng-container>
+  <ng-template #empty>
+    <div class="mt-5" style="text-align: center">Chưa có sản phẩm mới</div>
+  </ng-template>
 </div>

@@ -37,8 +37,8 @@ export class SidebarComponent implements OnInit {
         } else {
           this.coreService.activeAdmin$.next(false);
         }
+        this.getCategories();
       }
-      this.getCategories();
     });
   }
 

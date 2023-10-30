@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { catchError } from 'rxjs';
+import { AccountService } from 'src/app/services/account.service';
 
 @Component({
   selector: 'app-register',
@@ -8,12 +10,20 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class RegisterComponent implements OnInit {
   formData = {
-    username: '',
+    fullName: '',
     email: '',
-    password: ''
+    password: '',
+    repassword: '',
+    phoneNumber: '',
+    role: 'customer'
   };
 
-  constructor(public activeModal: NgbActiveModal) {}
+  showAlert: boolean = false;
+
+  constructor(
+    public activeModal: NgbActiveModal,
+    private accountService: AccountService
+  ) {}
 
   ngOnInit() {}
 
@@ -21,6 +31,14 @@ export class RegisterComponent implements OnInit {
     // Here, you can add your login logic.
     // For example, you can send a request to a server to validate the user's credentials.
     // For demonstration purposes, we'll just log the form data to the console.
-    console.log('Form Data:', this.formData);
+    this.accountService.registerAccountCustomer(this.formData).subscribe(
+      (res) => {
+        this.activeModal.close();
+        alert('Đăng kí thành công');
+      },
+      (err) => {
+        (this.showAlert = true), catchError(err);
+      }
+    );
   }
 }

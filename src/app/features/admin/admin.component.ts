@@ -1,7 +1,6 @@
 import { query } from '@angular/animations';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-// import { COUNTRIES, Country } from '../cart/cart.component';
 import { TreeService } from 'src/app/services/tree.service';
 import { AccountService } from 'src/app/services/account.service';
 import { NzModalService } from 'ng-zorro-antd/modal';
@@ -22,8 +21,6 @@ export class AdminComponent implements OnInit {
   activeCategory: any;
   page = 1;
   pageSize = 6;
-  // collectionSize = COUNTRIES.length;
-  // countries!: Country[];
   listCategories: any[] = [];
 
   //tree
@@ -61,6 +58,27 @@ export class AdminComponent implements OnInit {
     active: true
   };
 
+  formClient = {
+    email: '',
+    password: '123456',
+    fullName: '',
+    phoneNumber: '',
+    role: 'customer'
+  };
+  isVisibleClient: boolean = false;
+  isEditClient: boolean = false;
+
+  isVisibleStaff = false;
+  isEditStaff = false;
+  formStaff: any = {
+    email: '',
+    password: '123456',
+    fullName: '',
+    phoneNumber: '',
+    role: 'admin',
+    address: ''
+  };
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -88,12 +106,11 @@ export class AdminComponent implements OnInit {
         )[0];
       }
       if (this.activeCategory.link === 'category') {
-        this.treeService.getCategories().subscribe((res: any) => {
-          this.listCategories = res?.rows;
-        });
+        this.getCategories();
       }
       if (this.activeCategory.link === 'tree') {
         this.getListTree();
+        this.getCategories();
       }
       if (this.activeCategory.link === 'client') {
         this.getAllClient();
@@ -173,12 +190,19 @@ export class AdminComponent implements OnInit {
     };
     console.log(this.formTree);
   }
+
+  getCategories(): void {
+    this.treeService.getCategories().subscribe((res: any) => {
+      this.listCategories = res?.rows;
+    });
+  }
   //end category
 
   /* tree */
   getListTree() {
+    const query = '?limit=50';
     this.treeService
-      .getAllTree()
+      .getAllTree(query)
       .subscribe((tree) => (this.listTree = tree.rows));
   }
   startEdit(id: string): void {
@@ -200,6 +224,7 @@ export class AdminComponent implements OnInit {
 
   handleCancelTree() {
     this.openModalAddTree = false;
+    this.isEditTree = false;
     this.formTree = {
       name: '',
       description: '',
@@ -240,7 +265,25 @@ export class AdminComponent implements OnInit {
   }
 
   addClient(): void {
-    console.log('addClient');
+    this.formClient = {
+      email: '',
+      password: '123456',
+      fullName: '',
+      phoneNumber: '',
+      role: 'customer'
+    };
+    this.isVisibleClient = true;
+  }
+  addStaff(): void {
+    this.formStaff = {
+      email: '',
+      password: '123456',
+      fullName: '',
+      phoneNumber: '',
+      role: 'admin',
+      address: ''
+    };
+    this.isVisibleStaff = true;
   }
 
   // Mở modal
@@ -292,6 +335,57 @@ export class AdminComponent implements OnInit {
         this.handleCancelTree();
       });
     }
+  }
+
+  handleCancelClient() {
+    this.isEditClient = false;
+    this.isVisibleClient = false;
+  }
+
+  handleAddClient() {
+    if (
+      this.formClient.email == '' ||
+      this.formClient.fullName == '' ||
+      this.formClient.phoneNumber == ''
+    ) {
+      return alert('Nhập đủ thông tin');
+    }
+    this.accountService.registerAccountCustomer(this.formClient).subscribe(
+      (res) => {
+        alert('Thêm thành công khách hàng mới');
+        this.handleCancelClient();
+      },
+      (err) => alert('Có lỗi khi thêm khách hàng mới')
+    );
+  }
+
+  handleCancelStaff() {
+    this.isEditClient = false;
+    this.isVisibleClient = false;
+  }
+
+  handleAddStaff() {
+    if (
+      this.formStaff.email == '' ||
+      this.formStaff.fullName == '' ||
+      this.formStaff.phoneNumber == '' ||
+      this.formStaff.address == ''
+    ) {
+      return alert('Nhập đủ thông tin');
+    }
+    this.formStaff = {
+      email: this.formStaff.email,
+      fullName: this.formStaff.fullName,
+      phoneNumber: this.formStaff.phoneNumber,
+      role: this.formStaff.role
+    };
+    this.accountService.registerAccountCustomer(this.formStaff).subscribe(
+      (res) => {
+        alert('Thêm thành công nhân viên mới');
+        this.handleCancelClient();
+      },
+      (err) => alert('Có lỗi khi thêm nhân viên mới')
+    );
   }
 }
 

@@ -8,8 +8,10 @@
           type="search"
           placeholder="Tìm kiếm sản phẩm"
           style="width: 350px"
+          [(ngModel)]="nameProduct"
+          name="search"
         />
-        <button class="btn btn-success" type="submit">
+        <button class="btn btn-success" type="submit" (click)="searchItem()">
           <i class="bi bi-search"></i>
         </button>
       </form>
