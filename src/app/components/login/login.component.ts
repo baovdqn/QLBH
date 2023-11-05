@@ -31,7 +31,7 @@ export class LoginComponent implements OnInit {
     this.accountService.login(this.formData).subscribe(
       (res) => {
         localStorage.setItem('currentUser', JSON.stringify(res));
-        localStorage.setItem('token', JSON.stringify(res.jwt.accessToken));
+        localStorage.setItem('token', res.jwt.accessToken);
         this.coreService.noLogged$.next(false);
         this.activeModal.close();
         this.router.navigate(['/']);

@@ -28,6 +28,7 @@ export class AccountService {
 
   logout() {
     localStorage.removeItem('currentUser');
+    localStorage.removeItem('token');
     this.currentUserSubject.next(null);
   }
   registerAccountCustomer(body: any) {

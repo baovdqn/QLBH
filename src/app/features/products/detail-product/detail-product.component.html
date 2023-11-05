@@ -4,7 +4,9 @@
   </div>
   <div class="col-8">
     <h4 class="mb-4">{{ product?.name }}</h4>
-    <h5 class="price mb-4">Giá: {{ product?.price | number : '1.0-0' }} đ</h5>
+    <h5 class="price mb-4">
+      Giá sản phẩm: {{ product?.price | number : '1.0-0' }} đ
+    </h5>
     <p>Thuộc loại: {{ product?.categories[0].name }}</p>
     <button
       class="btn btn-success text-btn btn-sm"
@@ -12,11 +14,14 @@
     >
       Thêm vào giỏ hàng
     </button>
+    <h5 class="my-4">Danh sách cửa hàng</h5>
+    <p>Chi nhánh 1: 96 Định Công, Thanh Xuân, Hà Nội</p>
+    <p>Chi nhánh 2: Thuỵ Khuê, Tây Hồ, Hà Nội</p>
   </div>
 </div>
 <div class="description row mt-3">
   <div class="col-12">
-    <h5 class="mb-1">Chi tiết sản phẩm - Mô tả:</h5>
+    <h5 class="mb-2">Chi tiết sản phẩm - Mô tả:</h5>
     <div style="white-space: pre-line" [innerHTML]="product?.description"></div>
   </div>
 </div>
