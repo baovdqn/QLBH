@@ -1,0 +1,9 @@
+@media print {
+  .ant-modal{
+    width: auto !important;
+    top: 0 !important;
+  }
+  .ant-modal-close{
+    visibility: hidden !important;
+  }
+}

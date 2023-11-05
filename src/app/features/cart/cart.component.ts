@@ -22,6 +22,7 @@ export class CartComponent implements OnInit {
   formConfirmTransaction = {
     address: ''
   };
+  isOkLoading: boolean = false;
   @ViewChild('formTransition', { static: false }) formTransition!: NgForm;
 
   constructor(
@@ -41,9 +42,6 @@ export class CartComponent implements OnInit {
   }
 
   checkout() {
-    // this.cartService.createTransaction(this.carts).subscribe((res) => {
-    //   console.log('newTransaction', res);
-    // });
     this.isVisibleModal = true;
   }
 
@@ -54,6 +52,7 @@ export class CartComponent implements OnInit {
   }
 
   handleConfirm(form?: any) {
+    this.isOkLoading = true;
     if (this.formTransition.invalid) {
       for (let i in this.formTransition.controls) {
         if (this.formTransition.controls[i].invalid) {
@@ -71,8 +70,13 @@ export class CartComponent implements OnInit {
       price: this.sumPrice,
       listItem: this.carts
     };
-    this.cartService.createTransaction(transaction).subscribe((res) => {
-      console.log('newTransaction', res);
-    });
+    this.cartService.createTransaction(transaction).subscribe(
+      (res) => {
+        this.isOkLoading = false;
+      },
+      (err) => {
+        this.isOkLoading = false;
+      }
+    );
   }
 }

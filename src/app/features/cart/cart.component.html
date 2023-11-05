@@ -50,6 +50,7 @@
   [nzTitle]="'Xác nhận mua hàng'"
   (nzOnCancel)="isVisibleModal = false"
   (nzOnOk)="handleConfirm()"
+  [nzOkLoading]="isOkLoading"
   #modalForm
 >
   <ng-container *nzModalContent>

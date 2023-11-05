@@ -10,3 +10,19 @@ body {
   font-size: 100%;
   font-size: 16px;
 }
+
+@media print {
+  .ant-modal{
+    width: auto;
+    top: 0;
+  }
+  .ant-modal-close{
+    visibility: hidden;
+  }
+  .ant-modal-footer{
+    display: none;
+  }
+  .ant-modal-content{
+    box-shadow: unset;
+  }
+}

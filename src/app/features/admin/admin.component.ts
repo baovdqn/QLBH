@@ -1,9 +1,9 @@
-import { query } from '@angular/animations';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TreeService } from 'src/app/services/tree.service';
-import { AccountService } from 'src/app/services/account.service';
 import { NzModalService } from 'ng-zorro-antd/modal';
+import { AccountService } from 'src/app/services/account.service';
+import { CartsService } from 'src/app/services/carts.service';
+import { TreeService } from 'src/app/services/tree.service';
 
 @Component({
   selector: 'app-admin',
@@ -34,6 +34,11 @@ export class AdminComponent implements OnInit {
   //staff: nhân viên
   listStaff: any[] = [];
   isVisible: boolean = false;
+
+  //listInvoices: any[] = [];
+  listInvoice: any[] = [];
+  isVisibleInvoiceDetail: boolean = false;
+  dataDetailInvoice: any;
 
   //test
 
@@ -84,15 +89,16 @@ export class AdminComponent implements OnInit {
     private router: Router,
     private treeService: TreeService,
     private accountService: AccountService,
-    private modal: NzModalService
+    private modal: NzModalService,
+    private cartService: CartsService
   ) {
     const currentUser = JSON.parse(
       window.localStorage.getItem('currentUser') || '{}'
     );
     const role = currentUser?.role;
-    if (!role || role !== 'admin') {
-      this.router.navigateByUrl('/');
-    }
+    // if (!role || role !== 'admin') {
+    //   this.router.navigateByUrl('/');
+    // }
   }
 
   ngOnInit() {
@@ -117,6 +123,10 @@ export class AdminComponent implements OnInit {
       }
       if (this.activeCategory.link === 'staff') {
         this.getAllAdmin();
+      }
+      if (this.activeCategory.link === 'invoice') {
+        console.log('Invoice active');
+        this.getAllInvoice();
       }
     });
     //tree
@@ -203,7 +213,7 @@ export class AdminComponent implements OnInit {
     const query = '?limit=50';
     this.treeService
       .getAllTree(query)
-      .subscribe((tree) => (this.listTree = tree.rows));
+      .subscribe((tree) => (this.listTree = tree.rows.reverse()));
   }
   startEdit(id: string): void {
     this.editId = id;
@@ -214,8 +224,9 @@ export class AdminComponent implements OnInit {
   }
 
   deleteTree(id: string): void {
-    this.treeService.deleteTree(id).subscribe();
-    this.getListTree();
+    this.treeService.deleteTree(id).subscribe((res) => {
+      this.getListTree();
+    });
   }
 
   openModalTree() {
@@ -386,6 +397,32 @@ export class AdminComponent implements OnInit {
       },
       (err) => alert('Có lỗi khi thêm nhân viên mới')
     );
+  }
+
+  getAllInvoice() {
+    this.cartService
+      .listTransaction()
+      .subscribe((res) => (this.listInvoice = res.rows));
+  }
+
+  viewDetailInvoice(data: any) {
+    this.isVisibleInvoiceDetail = true;
+    this.dataDetailInvoice = data;
+  }
+  handleCancelInvoiceDetail() {
+    this.isVisibleInvoiceDetail = false;
+  }
+
+  handleOklInvoiceDetail() {
+    window.print();
+  }
+
+  printInvoice(data: any) {
+    this.isVisibleInvoiceDetail = true;
+    this.dataDetailInvoice = data;
+    setTimeout(() => {
+      window.print();
+    }, 0);
   }
 }
 
