@@ -1,4 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild
+} from '@angular/core';
+import { NgForm } from '@angular/forms';
+import { NzModalService } from 'ng-zorro-antd/modal';
 import { CartsService } from 'src/app/services/carts.service';
 
 @Component({
@@ -8,13 +16,18 @@ import { CartsService } from 'src/app/services/carts.service';
 })
 export class CartComponent implements OnInit {
   ngOnInit() {}
-
-  page = 1;
-  pageSize = 6;
-
   carts: any = [];
   sumPrice: any = 0;
-  constructor(private cartService: CartsService) {
+  isVisibleModal: boolean = false;
+  formConfirmTransaction = {
+    address: ''
+  };
+  @ViewChild('formTransition', { static: false }) formTransition!: NgForm;
+
+  constructor(
+    private cartService: CartsService,
+    private modalService: NzModalService
+  ) {
     this.carts = this.cartService.carts$.value;
     this.updatePrice();
   }
@@ -27,10 +40,39 @@ export class CartComponent implements OnInit {
     }
   }
 
-  checkout() {}
+  checkout() {
+    // this.cartService.createTransaction(this.carts).subscribe((res) => {
+    //   console.log('newTransaction', res);
+    // });
+    this.isVisibleModal = true;
+  }
 
   clear(index: number, carts: any[]) {
-    carts = carts.splice(index, 1);
+    this.carts.splice(index, 1);
+    this.carts = JSON.parse(JSON.stringify(this.carts));
     this.updatePrice();
+  }
+
+  handleConfirm(form?: any) {
+    if (this.formTransition.invalid) {
+      for (let i in this.formTransition.controls) {
+        if (this.formTransition.controls[i].invalid) {
+          this.formTransition.controls[i].markAsDirty();
+          this.formTransition.controls[i].updateValueAndValidity({
+            onlySelf: true
+          });
+        }
+      }
+      return;
+    }
+
+    let transaction = {
+      address: this.formTransition.value.address,
+      price: this.sumPrice,
+      listItem: this.carts
+    };
+    this.cartService.createTransaction(transaction).subscribe((res) => {
+      console.log('newTransaction', res);
+    });
   }
 }
