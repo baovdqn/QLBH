@@ -24,22 +24,22 @@ export class ErrorInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<unknown>> {
     return next.handle(request).pipe(
       catchError((err: HttpErrorResponse) => {
-        if (err.status === 400) {
-          alert(err.error.error);
-        }
-        if (err.status === 500) {
-          alert('Hệ thống đang bận. Mời thử lại!');
-        }
-        if (err.status === 404) {
-          this.router.navigate(['/']);
-        }
+        // if (err.status === 400) {
+        //   alert(err.error.error);
+        // }
+        // if (err.status === 500) {
+        //   alert('Hệ thống đang bận. Mời thử lại!');
+        // }
+        // if (err.status === 404) {
+        //   this.router.navigate(['/']);
+        // }
         if (err.status === 401) {
           localStorage.removeItem('token');
           localStorage.removeItem('currentUser');
           // this.accountService.changesUserValue(null);
         }
 
-        const error = err.error.error;
+        const error = err?.error?.error;
         return throwError(error);
       })
     );
