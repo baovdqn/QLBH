@@ -42,4 +42,8 @@ export class AccountService {
     let queryParams = new HttpParams().set('filter', filter);
     return this.http.get(`${this.apiUrl}/users`, { params: queryParams });
   }
+
+  deleteAccount(userId: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/users/${userId}`);
+  }
 }

@@ -39,9 +39,17 @@
               aria-labelledby="dropdownLogged"
               class="dropdown-logged dropdown-menu dropdown-menu-end"
             >
-              <button ngbDropdownItem (click)="manager()">Quản lý</button>
+              <p class="px-3 mb-0 pb-2 border-bottom">
+                Xin chào: {{ user?.fullName }}!
+              </p>
+              <button
+                ngbDropdownItem
+                (click)="manager()"
+                *ngIf="user?.role == 'admin'"
+              >
+                Quản lý
+              </button>
               <button ngbDropdownItem (click)="logout()">Đăng xuất</button>
-              <button ngbDropdownItem></button>
             </div>
           </div>
         </ng-template>

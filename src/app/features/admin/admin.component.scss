@@ -1,9 +1,16 @@
-@media print {
-  .ant-modal{
-    width: auto !important;
-    top: 0 !important;
-  }
-  .ant-modal-close{
-    visibility: hidden !important;
-  }
+.ellipsis-text-1 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
+
+// @media print {
+//   .ant-modal{
+//     width: auto !important;
+//     top: 0 !important;
+//   }
+//   .ant-modal-close{
+//     visibility: hidden !important;
+//   }
+// }

@@ -17,6 +17,7 @@ export class ProductComponent implements OnInit {
     let cart = this.cartsService.carts$.value;
     cart.push(product);
     this.cartsService.carts$.next(cart);
+    console.log(this.cartsService.carts$.value);
   }
 
   goToDetail(product: any) {

@@ -73,9 +73,14 @@ export class CartComponent implements OnInit {
     this.cartService.createTransaction(transaction).subscribe(
       (res) => {
         this.isOkLoading = false;
+        this.isVisibleModal = false;
+        alert('Mua hàng thành công');
+        this.cartService.carts$.next([]);
+        this.carts = [];
       },
       (err) => {
         this.isOkLoading = false;
+        alert('Mua hàng thất bại');
       }
     );
   }

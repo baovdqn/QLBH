@@ -22,10 +22,12 @@ export class HeaderComponent implements OnInit {
   ) {}
   noLogged$: BehaviorSubject<boolean> = this.coreService.noLogged$;
   nameProduct: string = '';
+  user: any;
   ngOnInit() {
     this.accountService.currentUser.subscribe((user) => {
       if (user?.id) {
         this.coreService.noLogged$.next(false);
+        this.user = user;
       } else {
         this.coreService.noLogged$.next(true);
       }

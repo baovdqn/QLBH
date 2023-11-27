@@ -34,5 +34,6 @@ export class DetailProductComponent implements OnInit {
     let cart = this.cartService.carts$.value;
     cart.push(product);
     this.cartService.carts$.next(cart);
+    console.log(this.cartService.carts$.value);
   }
 }

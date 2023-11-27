@@ -149,6 +149,7 @@
             <th>Họ và tên</th>
             <th>Email</th>
             <th>Số điện thoại</th>
+            <th>Thao tác</th>
           </tr>
         </thead>
         <tbody>
@@ -162,12 +163,23 @@
             <td>{{ data?.fullName }}</td>
             <td>{{ data?.email }}</td>
             <td>{{ data?.phoneNumber }}</td>
+            <td>
+              <button
+                nz-button
+                nzType="primary"
+                nz-popconfirm
+                nzPopconfirmTitle="Bạn có muốn xoá tài khoản này?"
+                (nzOnConfirm)="deleteUser(data.id)"
+              >
+                <span>Xoá</span>
+              </button>
+            </td>
           </tr>
         </tbody>
       </nz-table>
     </div>
     <div *ngSwitchCase="'staff'">
-      <button nz-button (click)="addClient()" nzType="primary">
+      <button nz-button (click)="addStaff()" nzType="primary">
         Thêm nhân viên
       </button>
       <br />
@@ -179,6 +191,9 @@
             <th>Email</th>
             <th>Họ tên</th>
             <th>Số điện thoại</th>
+            <th>Địa chỉ</th>
+            <th>Hệ số lương</th>
+            <th>Thao tác</th>
           </tr>
         </thead>
         <tbody>
@@ -190,8 +205,21 @@
               {{ index + 1 }}
             </td>
             <td>{{ data?.email }}</td>
-            <td>{{ 'example' }}</td>
-            <td>{{ 'example' }}</td>
+            <td>{{ data?.fullName || '...' }}</td>
+            <td>{{ data?.phoneNumber || '...' }}</td>
+            <td>{{ data?.address || '...' }}</td>
+            <td>{{ data?.hsl || '...' }}</td>
+            <td>
+              <button
+                nz-button
+                nzType="primary"
+                nz-popconfirm
+                nzPopconfirmTitle="Bạn có muốn xoá tài khoản này?"
+                (nzOnConfirm)="deleteUser(data.id)"
+              >
+                <span>Xoá</span>
+              </button>
+            </td>
           </tr>
         </tbody>
       </nz-table>
@@ -200,11 +228,14 @@
       <nz-table #invoiceTable nzBordered [nzData]="listInvoice">
         <thead>
           <tr>
-            <th>Mã hoá đơn</th>
-            <th>Email</th>
-            <th>Tổng tiền</th>
-            <th>Địa chỉ</th>
-            <th>Thao tác</th>
+            <th
+              *ngFor="let column of listColumnInvoice"
+              [nzSortOrder]="column.sortOrder"
+              [nzSortFn]="column.sortFn"
+              [nzSortDirections]="column.sortDirections"
+            >
+              {{ column?.name }}
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -235,6 +266,7 @@
   </div>
 </div>
 
+<!-- Modal thêm loại cây -->
 <nz-modal
   [(nzVisible)]="isVisible"
   [nzTitle]="isEditCategory ? 'Sửa loại cây' : 'Thêm loại cây'"
@@ -276,6 +308,7 @@
   </ng-container>
 </nz-modal>
 
+<!-- Modal thêm cây cảnh -->
 <nz-modal
   [(nzVisible)]="openModalAddTree"
   [nzTitle]="isEditTree ? 'Chỉnh sửa cây cảnh' : 'Thêm cây cảnh'"
@@ -413,12 +446,73 @@
         />
       </div>
       <div nz-form-item class="d-flex gap-2 mb-2">
+        <label for="fullName" style="width: 100px">Họ và tên:</label>
+        <input
+          type="text"
+          id="fullName"
+          name="fullName"
+          [(ngModel)]="formClient.fullName"
+          required
+          style="
+            height: 32px;
+            flex: 1;
+            border: 1px solid #dddddd;
+            padding: 0 12px;
+          "
+        />
+      </div>
+      <div nz-form-item class="d-flex gap-2 mb-2">
+        <label for="phoneNumber" style="width: 100px">Số điện thoại:</label>
+        <input
+          type="text"
+          id="phoneNumber"
+          name="phoneNumber"
+          [(ngModel)]="formClient.phoneNumber"
+          required
+          style="
+            height: 32px;
+            flex: 1;
+            border: 1px solid #dddddd;
+            padding: 0 12px;
+          "
+        />
+      </div>
+    </form>
+  </ng-container>
+</nz-modal>
+
+<!-- Modal thêm nhân viên -->
+<nz-modal
+  [(nzVisible)]="isVisibleStaff"
+  [nzTitle]="isEditClient ? 'Sửa thông tin nhân viên' : 'Thêm nhân viên'"
+  (nzOnCancel)="handleCancelStaff()"
+  (nzOnOk)="handleAddStaff()"
+>
+  <ng-container *nzModalContent>
+    <form #form="ngForm">
+      <div nz-form-item class="d-flex gap-2 mb-2">
+        <label for="name" style="width: 100px">Email:</label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          [(ngModel)]="formStaff.email"
+          required
+          style="
+            height: 32px;
+            flex: 1;
+            border: 1px solid #dddddd;
+            padding: 0 12px;
+          "
+        />
+      </div>
+      <div nz-form-item class="d-flex gap-2 mb-2">
         <label for="name" style="width: 100px">Họ và tên:</label>
         <input
           type="text"
           id="name"
           name="name"
-          [(ngModel)]="formClient.fullName"
+          [(ngModel)]="formStaff.fullName"
           required
           style="
             height: 32px;
@@ -434,7 +528,39 @@
           type="text"
           id="name"
           name="name"
-          [(ngModel)]="formClient.phoneNumber"
+          [(ngModel)]="formStaff.phoneNumber"
+          required
+          style="
+            height: 32px;
+            flex: 1;
+            border: 1px solid #dddddd;
+            padding: 0 12px;
+          "
+        />
+      </div>
+      <div nz-form-item class="d-flex gap-2 mb-2">
+        <label for="name" style="width: 100px">Địa chỉ:</label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          [(ngModel)]="formStaff.address"
+          required
+          style="
+            height: 32px;
+            flex: 1;
+            border: 1px solid #dddddd;
+            padding: 0 12px;
+          "
+        />
+      </div>
+      <div nz-form-item class="d-flex gap-2 mb-2">
+        <label for="name" style="width: 100px">Hệ số lương:</label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          [(ngModel)]="formStaff.hsl"
           required
           style="
             height: 32px;
@@ -491,13 +617,13 @@
           <td>{{ data?.name }}</td>
           <td>{{ data?.Item.quantity }}</td>
           <td class="text-end">
-            {{ data?.Item.quantity * data?.price | number : '1.0-0' }}
+            {{ data?.Item.quantity * data?.price | number : '1.0-0' }} đ
           </td>
         </tr>
         <tr>
           <td>Tổng tiền</td>
           <td colspan="3" class="text-end">
-            {{ dataDetailInvoice.price | number : '1.0-0' }}
+            {{ dataDetailInvoice.price | number : '1.0-0' }} đ
           </td>
         </tr>
       </tbody>
@@ -505,6 +631,7 @@
   </ng-container>
 </nz-modal>
 
+<!-- Footer footer invoice -->
 <ng-template #modalFooter>
   <button nz-button nzType="default" (click)="handleCancelInvoiceDetail()">
     Huỷ

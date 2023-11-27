@@ -39,8 +39,32 @@ export class AdminComponent implements OnInit {
   listInvoice: any[] = [];
   isVisibleInvoiceDetail: boolean = false;
   dataDetailInvoice: any;
-
-  //test
+  listColumnInvoice: any[] = [
+    {
+      name: 'Mã hoá đơn',
+      sortOrder: null,
+      sortFn: (a: any, b: any) => a.price - b.price,
+      sortDirections: ['ascend', 'descend', null]
+    },
+    {
+      name: 'Email'
+    },
+    {
+      name: 'Tổng tiền',
+      sortOrder: null,
+      sortFn: (a: any, b: any) => a.price - b.price,
+      sortDirections: ['ascend', 'descend', null]
+    },
+    {
+      name: 'Địa chỉ',
+      sortOrder: null,
+      sortFn: (a: any, b: any) => a.address.localeCompare(b.address),
+      sortDirections: null
+    },
+    {
+      name: 'Thao tác'
+    }
+  ];
 
   // isVisible = false;
   formCategory = {
@@ -81,7 +105,8 @@ export class AdminComponent implements OnInit {
     fullName: '',
     phoneNumber: '',
     role: 'admin',
-    address: ''
+    address: '',
+    hsl: ''
   };
 
   constructor(
@@ -198,7 +223,6 @@ export class AdminComponent implements OnInit {
       ...this.formTree,
       categories: [event]
     };
-    console.log(this.formTree);
   }
 
   getCategories(): void {
@@ -371,8 +395,8 @@ export class AdminComponent implements OnInit {
   }
 
   handleCancelStaff() {
-    this.isEditClient = false;
-    this.isVisibleClient = false;
+    this.isEditStaff = false;
+    this.isVisibleStaff = false;
   }
 
   handleAddStaff() {
@@ -388,12 +412,16 @@ export class AdminComponent implements OnInit {
       email: this.formStaff.email,
       fullName: this.formStaff.fullName,
       phoneNumber: this.formStaff.phoneNumber,
-      role: this.formStaff.role
+      password: '123456',
+      role: this.formStaff.role,
+      hsl: this.formStaff.hsl,
+      address: this.formStaff.address
     };
     this.accountService.registerAccountCustomer(this.formStaff).subscribe(
       (res) => {
         alert('Thêm thành công nhân viên mới');
-        this.handleCancelClient();
+        this.handleCancelStaff();
+        this.getAllAdmin();
       },
       (err) => alert('Có lỗi khi thêm nhân viên mới')
     );
@@ -423,6 +451,18 @@ export class AdminComponent implements OnInit {
     setTimeout(() => {
       window.print();
     }, 0);
+  }
+
+  deleteUser(userId: string) {
+    this.accountService.deleteAccount(userId).subscribe(
+      (res) => {
+        console.log('deleteUser', res);
+        alert('Đã xoá tài khoản');
+        this.getAllAdmin();
+        this.getAllClient();
+      },
+      (err) => alert('Có lỗi khi xoá tài khoản')
+    );
   }
 }
 

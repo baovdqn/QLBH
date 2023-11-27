@@ -12,17 +12,20 @@ body {
 }
 
 @media print {
-  .ant-modal{
+  .ant-modal {
     width: auto;
     top: 0;
   }
-  .ant-modal-close{
+  .ant-modal-close {
     visibility: hidden;
   }
-  .ant-modal-footer{
+  .ant-modal-footer {
     display: none;
   }
-  .ant-modal-content{
+  .ant-modal-content {
     box-shadow: unset;
+  }
+  .footer {
+    display: none !important;
   }
 }
