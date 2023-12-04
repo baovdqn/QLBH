@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Product } from '../features/products/product/product.component';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -19,7 +19,21 @@ export class CartsService {
       body
     );
   }
-  listTransaction(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/transactions/list`);
+  listTransaction(dateRage?: any): Observable<any> {
+    if (dateRage) {
+      const timeStartISO = dateRage[0].toISOString();
+      const timeEndISO = dateRage[1].toISOString();
+      const filter = JSON.stringify([
+        { operator: 'gte', value: timeStartISO, prop: 'createdAt' },
+        { operator: 'lte', value: timeEndISO, prop: 'createdAt' }
+      ]);
+      console.log(filter);
+      let queryParams = new HttpParams().set('filter', filter);
+      return this.http.get(`${this.apiUrl}/transactions/list`, {
+        params: queryParams
+      });
+    } else {
+      return this.http.get(`${this.apiUrl}/transactions/list`);
+    }
   }
 }

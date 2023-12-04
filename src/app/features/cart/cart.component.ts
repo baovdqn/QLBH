@@ -36,7 +36,7 @@ export class CartComponent implements OnInit {
   updatePrice(): void {
     if (this.carts.length > 0) {
       this.sumPrice = this.carts.reduce((a: any, b: any) => {
-        return a + b.price;
+        return a + b.price * b.quantity;
       }, 0);
     }
   }
@@ -70,6 +70,7 @@ export class CartComponent implements OnInit {
       price: this.sumPrice,
       listItem: this.carts
     };
+    // console.log(transaction);
     this.cartService.createTransaction(transaction).subscribe(
       (res) => {
         this.isOkLoading = false;
@@ -83,5 +84,24 @@ export class CartComponent implements OnInit {
         alert('Mua hàng thất bại');
       }
     );
+  }
+
+  increment(data: any) {
+    const findTree = this.carts.findIndex((i: any) => i.id === data.id);
+    if (findTree !== -1) {
+      if (this.carts[findTree].quantity === 1) {
+        return;
+      }
+      this.carts[findTree].quantity = this.carts[findTree].quantity - 1;
+    }
+    this.updatePrice();
+  }
+
+  decrement(data: any) {
+    const findTree = this.carts.findIndex((i: any) => i.id === data.id);
+    if (findTree !== -1) {
+      this.carts[findTree].quantity = this.carts[findTree].quantity + 1;
+    }
+    this.updatePrice();
   }
 }

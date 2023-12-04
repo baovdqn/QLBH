@@ -43,7 +43,7 @@ export class AdminComponent implements OnInit {
     {
       name: 'Mã hoá đơn',
       sortOrder: null,
-      sortFn: (a: any, b: any) => a.price - b.price,
+      sortFn: (a: any, b: any) => a.id - b.id,
       sortDirections: ['ascend', 'descend', null]
     },
     {
@@ -63,6 +63,32 @@ export class AdminComponent implements OnInit {
     },
     {
       name: 'Thao tác'
+    }
+  ];
+  listColumnInvoiceReport: any[] = [
+    {
+      name: 'Mã hoá đơn',
+      sortOrder: null,
+      sortFn: (a: any, b: any) => a.id - b.id,
+      sortDirections: ['ascend', 'descend', null]
+    },
+    {
+      name: 'Email'
+    },
+    {
+      name: 'Tổng tiền',
+      sortOrder: null,
+      sortFn: (a: any, b: any) => a.price - b.price,
+      sortDirections: ['ascend', 'descend', null]
+    },
+    {
+      name: 'Địa chỉ',
+      sortOrder: null,
+      sortFn: (a: any, b: any) => a.address.localeCompare(b.address),
+      sortDirections: null
+    },
+    {
+      name: 'Ngày cập nhật đơn'
     }
   ];
 
@@ -108,6 +134,10 @@ export class AdminComponent implements OnInit {
     address: '',
     hsl: ''
   };
+
+  //date range
+  date: null | Date[] = null;
+  isVisibleReport = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -463,6 +493,28 @@ export class AdminComponent implements OnInit {
       },
       (err) => alert('Có lỗi khi xoá tài khoản')
     );
+  }
+
+  onChange(result: Date[]): void {
+    console.log('onChange: ', result);
+    // const timeStartISO = result[0].toISOString();
+    // const timeEndISO = result[1].toISOString();
+    if (result.length == 0) {
+      this.getAllInvoice();
+    } else {
+      this.cartService
+        .listTransaction(result)
+        .subscribe((res) => (this.listInvoice = res.rows));
+    }
+  }
+
+  openReport() {
+    this.isVisibleReport = true;
+  }
+
+  handleCancelReport() {
+    this.isVisibleReport = false;
+    this.getAllInvoice();
   }
 }
 

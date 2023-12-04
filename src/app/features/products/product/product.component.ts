@@ -15,7 +15,18 @@ export class ProductComponent implements OnInit {
 
   addToCart(product: any) {
     let cart = this.cartsService.carts$.value;
-    cart.push(product);
+    if (cart.length == 0) {
+      product.quantity = 1;
+      cart.push(product);
+    } else {
+      const indexTreeExit = cart.findIndex((i) => i.id == product.id);
+      if (indexTreeExit !== -1) {
+        cart[indexTreeExit].quantity = cart[indexTreeExit].quantity + 1;
+      } else {
+        product.quantity = 1;
+        cart.push(product);
+      }
+    }
     this.cartsService.carts$.next(cart);
     console.log(this.cartsService.carts$.value);
   }
@@ -31,4 +42,5 @@ export interface Product {
   priceProduct: string | number;
   salePriceProduct: string | number | undefined;
   imageProduct: string;
+  quantity: number;
 }
