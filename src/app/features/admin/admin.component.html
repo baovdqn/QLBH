@@ -167,6 +167,14 @@
               <button
                 nz-button
                 nzType="primary"
+                class="me-1"
+                (click)="editClient(data)"
+              >
+                <span>Chỉnh sửa</span>
+              </button>
+              <button
+                nz-button
+                nzType="primary"
                 nz-popconfirm
                 nzPopconfirmTitle="Bạn có muốn xoá tài khoản này?"
                 (nzOnConfirm)="deleteUser(data.id)"
@@ -193,7 +201,7 @@
             <th>Số điện thoại</th>
             <th>Địa chỉ</th>
             <th>Hệ số lương</th>
-            <th>Thao tác</th>
+            <th style="width: 21%">Thao tác</th>
           </tr>
         </thead>
         <tbody>
@@ -213,6 +221,14 @@
               <button
                 nz-button
                 nzType="primary"
+                class="me-1"
+                (click)="editStaff(data)"
+              >
+                <span>Chỉnh sửa</span>
+              </button>
+              <button
+                nz-button
+                nzType="primary"
                 nz-popconfirm
                 nzPopconfirmTitle="Bạn có muốn xoá tài khoản này?"
                 (nzOnConfirm)="deleteUser(data.id)"
@@ -228,7 +244,7 @@
       <div class="d-flex justify-content-between">
         <div>
           <button nz-button nzType="primary">
-            <span>Thêm hoá đơn</span>
+            <!-- <span>Thêm hoá đơn</span> -->
           </button>
         </div>
         <div>
@@ -402,6 +418,33 @@
         />
       </div>
       <div nz-form-item class="d-flex gap-2 mb-2">
+        <label for="image" style="width: 100px">Hình ảnh:</label>
+        <div class="clearfix">
+          <nz-upload
+            nzListType="picture-card"
+            [(nzFileList)]="fileList"
+            [nzShowButton]="fileList.length < 1"
+            [nzPreview]="handlePreview"
+            (nzChange)="handleChange($event)"
+          >
+            <div>
+              <span nz-icon nzType="plus"></span>
+              <div style="margin-top: 8px">Tải lên</div>
+            </div>
+          </nz-upload>
+          <nz-modal
+            [nzVisible]="previewVisible"
+            [nzContent]="modalContent"
+            [nzFooter]="null"
+            (nzOnCancel)="previewVisible = false"
+          >
+            <ng-template #modalContent>
+              <img [src]="previewImage" [ngStyle]="{ width: '100%' }" />
+            </ng-template>
+          </nz-modal>
+        </div>
+      </div>
+      <div nz-form-item class="d-flex gap-2 mb-2">
         <label for="description" style="width: 100px">Mô tả:</label>
         <nz-textarea-count
           [nzMaxCharacterCount]="1500"
@@ -504,18 +547,18 @@
 <!-- Modal thêm nhân viên -->
 <nz-modal
   [(nzVisible)]="isVisibleStaff"
-  [nzTitle]="isEditClient ? 'Sửa thông tin nhân viên' : 'Thêm nhân viên'"
+  [nzTitle]="isEditStaff ? 'Sửa thông tin nhân viên' : 'Thêm nhân viên'"
   (nzOnCancel)="handleCancelStaff()"
   (nzOnOk)="handleAddStaff()"
 >
   <ng-container *nzModalContent>
     <form #form="ngForm">
       <div nz-form-item class="d-flex gap-2 mb-2">
-        <label for="name" style="width: 100px">Email:</label>
+        <label for="email" style="width: 100px">Email:</label>
         <input
           type="text"
-          id="name"
-          name="name"
+          id="email"
+          name="email"
           [(ngModel)]="formStaff.email"
           required
           style="
@@ -543,11 +586,11 @@
         />
       </div>
       <div nz-form-item class="d-flex gap-2 mb-2">
-        <label for="name" style="width: 100px">Số điện thoại:</label>
+        <label for="phoneNumber" style="width: 100px">Số điện thoại:</label>
         <input
           type="text"
-          id="name"
-          name="name"
+          id="phoneNumber"
+          name="phoneNumber"
           [(ngModel)]="formStaff.phoneNumber"
           required
           style="
@@ -559,11 +602,11 @@
         />
       </div>
       <div nz-form-item class="d-flex gap-2 mb-2">
-        <label for="name" style="width: 100px">Địa chỉ:</label>
+        <label for="address" style="width: 100px">Địa chỉ:</label>
         <input
           type="text"
-          id="name"
-          name="name"
+          id="address"
+          name="address"
           [(ngModel)]="formStaff.address"
           required
           style="
@@ -575,11 +618,11 @@
         />
       </div>
       <div nz-form-item class="d-flex gap-2 mb-2">
-        <label for="name" style="width: 100px">Hệ số lương:</label>
+        <label for="hsl" style="width: 100px">Hệ số lương:</label>
         <input
           type="text"
-          id="name"
-          name="name"
+          id="hsl"
+          name="hsl"
           [(ngModel)]="formStaff.hsl"
           required
           style="
@@ -678,17 +721,27 @@
     <p class="mt-2" *ngIf="date === null || date?.length === 0; else haveDate">
       {{ 'Đã có tất cả: ' + listInvoice.length + ' đơn hàng' }}
     </p>
+    <p>
+      Tổng tiền:
+      {{ sumListInvoice(listInvoice) | number : '1.0-0' }} đ
+    </p>
     <ng-template #haveDate>
-      <p class="mt-2" *ngIf="listInvoice.length > 0">
-        {{
-          'Đã có: ' +
-            listInvoice.length +
-            ' đơn hàng trong khoảng thời gian đã chọn'
-        }}
-      </p>
-      <p class="mt-2" *ngIf="listInvoice.length === 0">
-        Không có đơn hàng nào trong khoảng thời gian đã chọn
-      </p>
+      <div>
+        <p class="mt-2" *ngIf="listInvoice.length > 0">
+          {{
+            'Đã có: ' +
+              listInvoice.length +
+              ' đơn hàng trong khoảng thời gian đã chọn'
+          }}
+        </p>
+        <p class="mt-2" *ngIf="listInvoice.length === 0">
+          Không có đơn hàng nào trong khoảng thời gian đã chọn
+        </p>
+        <p>
+          Tổng tiền theo khoảng thời gian đã chọn:
+          {{ sumListInvoice(listInvoice) | number : '1.0-0' }} đ
+        </p>
+      </div>
     </ng-template>
     <nz-table #invoiceTable nzBordered [nzData]="listInvoice" class="mt-3">
       <thead>

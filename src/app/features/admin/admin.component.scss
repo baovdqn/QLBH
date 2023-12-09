@@ -14,3 +14,7 @@
 //     visibility: hidden !important;
 //   }
 // }
+.ant-upload-list-picture .ant-upload-list-item-error,
+.ant-upload-list-picture-card .ant-upload-list-item-error {
+  border-color: black;
+}

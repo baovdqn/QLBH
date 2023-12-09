@@ -85,6 +85,10 @@
         </nz-form-control>
       </nz-form-item>
     </form>
-    <div>Tổng tiền: {{ sumPrice | number : '1.0-0' }}</div>
+    <div class="mb-2">Tiền hàng: {{ sumPrice | number : '1.0-0' }}</div>
+    <div class="mb-2">
+      Phí vận chuyển: {{ priceShipping | number : '1.0-0' }}
+    </div>
+    <div class="mb-2">Tổng tiền: {{ lastPrice | number : '1.0-0' }}</div>
   </ng-container>
 </nz-modal>

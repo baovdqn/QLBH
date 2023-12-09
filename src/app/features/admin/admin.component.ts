@@ -4,6 +4,16 @@ import { NzModalService } from 'ng-zorro-antd/modal';
 import { AccountService } from 'src/app/services/account.service';
 import { CartsService } from 'src/app/services/carts.service';
 import { TreeService } from 'src/app/services/tree.service';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzUploadChangeParam, NzUploadFile } from 'ng-zorro-antd/upload';
+
+const getBase64 = (file: File): Promise<string | ArrayBuffer | null> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (error) => reject(error);
+  });
 
 @Component({
   selector: 'app-admin',
@@ -31,9 +41,11 @@ export class AdminComponent implements OnInit {
 
   //client
   listClient: any[] = [];
+  idClient: any;
   //staff: nhân viên
   listStaff: any[] = [];
   isVisible: boolean = false;
+  idStaff: any;
 
   //listInvoices: any[] = [];
   listInvoice: any[] = [];
@@ -113,12 +125,14 @@ export class AdminComponent implements OnInit {
     active: true
   };
 
-  formClient = {
+  formClient: any = {
     email: '',
     password: '123456',
     fullName: '',
     phoneNumber: '',
-    role: 'customer'
+    role: 'customer',
+    hsl: '',
+    address: ''
   };
   isVisibleClient: boolean = false;
   isEditClient: boolean = false;
@@ -139,13 +153,19 @@ export class AdminComponent implements OnInit {
   date: null | Date[] = null;
   isVisibleReport = false;
 
+  // upload image
+  fileList: NzUploadFile[] = [];
+  previewImage: string | undefined = '';
+  previewVisible = false;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private treeService: TreeService,
     private accountService: AccountService,
     private modal: NzModalService,
-    private cartService: CartsService
+    private cartService: CartsService,
+    private msg: NzMessageService
   ) {
     const currentUser = JSON.parse(
       window.localStorage.getItem('currentUser') || '{}'
@@ -210,6 +230,38 @@ export class AdminComponent implements OnInit {
     this.isEditCategory = true;
     this.idCategory = data.id;
     this.addCategory();
+  }
+
+  editClient(data: any) {
+    this.addClient();
+    this.formClient = {
+      email: data.email,
+      password: data.password,
+      fullName: data.fullName,
+      phoneNumber: data.phoneNumber,
+      role: 'customer',
+      hsl: '',
+      address: ''
+    };
+    this.isEditClient = true;
+    this.idClient = data.id;
+  }
+
+  editStaff(data: any) {
+    this.isEditStaff = true;
+    console.log(data);
+    this.addStaff();
+    this.formStaff = {
+      email: data.email,
+      password: data.password,
+      fullName: data.fullName,
+      phoneNumber: data.phoneNumber,
+      role: data.role,
+      hsl: data.hsl,
+      address: data.address
+    };
+    console.log('this.formStaff', this.formStaff);
+    this.idStaff = data.id;
   }
 
   deleteCategory(id: string) {
@@ -335,7 +387,9 @@ export class AdminComponent implements OnInit {
       password: '123456',
       fullName: '',
       phoneNumber: '',
-      role: 'customer'
+      role: 'customer',
+      hsl: '',
+      address: ''
     };
     this.isVisibleClient = true;
   }
@@ -346,7 +400,8 @@ export class AdminComponent implements OnInit {
       fullName: '',
       phoneNumber: '',
       role: 'admin',
-      address: ''
+      address: '',
+      hsl: ''
     };
     this.isVisibleStaff = true;
   }
@@ -369,6 +424,7 @@ export class AdminComponent implements OnInit {
       // Thực hiện lưu dữ liệu ở đây (ví dụ: gửi dữ liệu lên server)
       // Sau khi lưu xong, đóng modal và xóa dữ liệu trong form
       this.isVisible = false;
+      ``;
       this.resetForm();
     }
   }
@@ -415,13 +471,28 @@ export class AdminComponent implements OnInit {
     ) {
       return alert('Nhập đủ thông tin');
     }
-    this.accountService.registerAccountCustomer(this.formClient).subscribe(
-      (res) => {
-        alert('Thêm thành công khách hàng mới');
-        this.handleCancelClient();
-      },
-      (err) => alert('Có lỗi khi thêm khách hàng mới')
-    );
+    if (!this.isEditClient) {
+      this.accountService.registerAccountCustomer(this.formClient).subscribe(
+        (res) => {
+          alert('Thêm thành công khách hàng mới');
+          this.handleCancelClient();
+          this.getAllClient();
+        },
+        (err) => alert('Có lỗi khi thêm khách hàng mới')
+      );
+    } else {
+      delete this.formClient.password;
+      this.accountService
+        .updateAccount(this.idClient, this.formClient)
+        .subscribe(
+          (res) => {
+            alert('Sửa thành công thông tin khách hàng!');
+            this.handleCancelClient();
+            this.getAllClient();
+          },
+          (err) => alert('Có lỗi khi sửa thông tin khách hàng')
+        );
+    }
   }
 
   handleCancelStaff() {
@@ -447,14 +518,26 @@ export class AdminComponent implements OnInit {
       hsl: this.formStaff.hsl,
       address: this.formStaff.address
     };
-    this.accountService.registerAccountCustomer(this.formStaff).subscribe(
-      (res) => {
-        alert('Thêm thành công nhân viên mới');
-        this.handleCancelStaff();
-        this.getAllAdmin();
-      },
-      (err) => alert('Có lỗi khi thêm nhân viên mới')
-    );
+    if (!this.isEditStaff) {
+      this.accountService.registerAccountCustomer(this.formStaff).subscribe(
+        (res) => {
+          alert('Thêm thành công nhân viên mới');
+          this.handleCancelStaff();
+          this.getAllAdmin();
+        },
+        (err) => alert('Có lỗi khi thêm nhân viên mới')
+      );
+    } else {
+      delete this.formClient.password;
+      this.accountService.updateAccount(this.idStaff, this.formStaff).subscribe(
+        (res) => {
+          alert('Sửa thành công thông tin nhân viên!');
+          this.handleCancelStaff();
+          this.getAllAdmin();
+        },
+        (err) => alert('Có lỗi khi sửa thông tin nhân viên')
+      );
+    }
   }
 
   getAllInvoice() {
@@ -496,7 +579,6 @@ export class AdminComponent implements OnInit {
   }
 
   onChange(result: Date[]): void {
-    console.log('onChange: ', result);
     // const timeStartISO = result[0].toISOString();
     // const timeEndISO = result[1].toISOString();
     if (result.length == 0) {
@@ -515,6 +597,33 @@ export class AdminComponent implements OnInit {
   handleCancelReport() {
     this.isVisibleReport = false;
     this.getAllInvoice();
+  }
+
+  handlePreview = async (file: NzUploadFile): Promise<void> => {
+    if (!file.url && !file['preview']) {
+      file['preview'] = await getBase64(file.originFileObj!);
+      console.log(file);
+    }
+    this.previewImage = file.url || file['preview'];
+    this.previewVisible = true;
+  };
+
+  async handleChange(info: any): Promise<void> {
+    if (info?.type == 'error') {
+      setTimeout(async () => {
+        info.fileList[0].preview = await getBase64(info.file.originFileObj);
+        console.log('info', info.fileList[0]);
+        this.formTree.image = info.fileList[0].preview;
+      }, 0);
+    }
+  }
+
+  sumListInvoice(data: any): string | number {
+    let sum = 0;
+    data.forEach((item: any) => {
+      sum = sum + item?.price;
+    });
+    return sum;
   }
 }
 

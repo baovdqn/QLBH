@@ -35,6 +35,10 @@ export class AccountService {
     return this.http.post<any>(`${this.apiUrl}/users`, body);
   }
 
+  updateAccount(id: any, body: any) {
+    return this.http.put<any>(`${this.apiUrl}/users/update/${id}`, body);
+  }
+
   getAccountForRole(role: string) {
     const filter = JSON.stringify([
       { operator: 'eq', value: role, prop: 'role' }

@@ -24,7 +24,8 @@ export class CartComponent implements OnInit {
   };
   isOkLoading: boolean = false;
   @ViewChild('formTransition', { static: false }) formTransition!: NgForm;
-
+  priceShipping: any = 0;
+  lastPrice: any = 0;
   constructor(
     private cartService: CartsService,
     private modalService: NzModalService
@@ -39,6 +40,8 @@ export class CartComponent implements OnInit {
         return a + b.price * b.quantity;
       }, 0);
     }
+    this.priceShipping = (this.sumPrice * 1) / 100;
+    this.lastPrice = this.sumPrice + this.priceShipping;
   }
 
   checkout() {
@@ -67,7 +70,7 @@ export class CartComponent implements OnInit {
 
     let transaction = {
       address: this.formTransition.value.address,
-      price: this.sumPrice,
+      price: this.lastPrice,
       listItem: this.carts
     };
     // console.log(transaction);
